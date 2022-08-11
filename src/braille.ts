@@ -41,15 +41,64 @@ export function cellToUnicode(cell: Cell): string {
   return String.fromCodePoint(brailleCodePoint);
 }
 
-/** Covnerts a string of latin characters to an array of braille cells */
+/**
+ * Converts a number literal to the braille alphabetic character equivalent.
+ * @param character The character to convert
+ * @returns A string with a single alphabetic character or null if `character` is not a number.
+ */
+function getNumberCharacter(character: string): string | null {
+  switch (character) {
+    case "1":
+      return "a";
+    case "2":
+      return "b";
+    case "3":
+      return "c";
+    case "4":
+      return "d";
+    case "5":
+      return "e";
+    case "6":
+      return "f";
+    case "7":
+      return "g";
+    case "8":
+      return "h";
+    case "9":
+      return "i";
+    case "0":
+      return "j";
+    default:
+      return null;
+  }
+}
+
+/**
+ * Determines if a character is uppercase in english.
+ * @param character The character to check
+ * @returns True if `character` is uppercase, otherwise false.
+ */
+function isUppercaseCharacter(character: string) {
+  const charCode = character.charCodeAt(0);
+  // check between "A" and "Z"
+  return charCode >= 65 && charCode <= 90;
+}
+
+/** Converts a string of latin characters to an array of braille cells */
 export function latinStringToCells(string: string): Array<Cell> {
   const ret: Cell[] = [];
   for (let i = 0; i < string.length; i++) {
     let character = string.charAt(i);
-    if (character === character.toUpperCase()) {
-      ret.push(BrailleModifiers.UPPER_CASE);
+
+    const numberCharacter = getNumberCharacter(character);
+    if (numberCharacter !== null) {
+      ret.push(BrailleModifiers.NUMBER);
+      character = numberCharacter;
+    } else if (isUppercaseCharacter(character)) {
+      ret.push(BrailleModifiers.UPPER_CASE_LETTER);
       character = character.toLowerCase();
     }
+
     ret.push(BRAILLE_MAP[character] || "?");
   }
   return ret;

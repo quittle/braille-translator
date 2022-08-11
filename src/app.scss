@@ -1,0 +1,16 @@
+@use "theme.scss";
+
+#brailleTranslation {
+  $font-size: theme.$FONT_SIZE_SLIGHTLY_LARGER;
+  background: theme.$SLIGHT_BLACKGROUND;
+  padding: 1em;
+  border-radius: theme.$SLIGHT_BORDER_RADIUS;
+  font-size: $font-size;
+
+  &::before {
+    display: inline-block;
+    height: $font-size;
+    content: "";
+    width: 0;
+  }
+}

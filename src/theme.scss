@@ -1,0 +1,6 @@
+@use "colors.scss";
+@use "dimens.scss";
+
+$SLIGHT_BLACKGROUND: colors.$LIGHT_GREY;
+$SLIGHT_BORDER_RADIUS: dimens.$SLIGHT_BORDER_RADIUS;
+$FONT_SIZE_SLIGHTLY_LARGER: dimens.$FONT_SIZE_SLIGHTLY_LARGER;

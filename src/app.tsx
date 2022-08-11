@@ -1,5 +1,5 @@
 import { useState } from "react";
-import "./app.css";
+import "./app.scss";
 import { latinStringToCells } from "./braille";
 import BrailleCharacter from "./braille-character";
 
@@ -22,7 +22,7 @@ export default function App() {
       <p>
         Here comes the braille...
         <br />
-        {brailleCharacters}
+        <div id="brailleTranslation"> {brailleCharacters} </div>
       </p>
     </div>
   );
