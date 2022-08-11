@@ -2,8 +2,9 @@ import { BrailleModifiers, BRAILLE_MAP } from "./braille-map";
 
 /** Represents a pip value, using the standard braille dot number system. */
 export type Pip = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+export type InvalidCell = "?";
 /** Represents a single character as either invalid or valid pips */
-export type Cell = "?" | ValidCell;
+export type Cell = InvalidCell | ValidCell;
 /** All possible valid pips in a c  */
 export type ValidCell =
   | Readonly<[]>
@@ -26,6 +27,7 @@ export function cellToUnicode(cell: Cell): string {
   if (!isValidCell(cell)) {
     return cell;
   }
+
   const pipValue = (pip: Pip) =>
     (cell as ReadonlyArray<Pip>).includes(pip) ? 1 << (pip - 1) : 0;
   const pipBinary =
@@ -37,7 +39,8 @@ export function cellToUnicode(cell: Cell): string {
     pipValue(6) |
     pipValue(7) |
     pipValue(8);
-  const brailleCodePoint = 10240 + pipBinary; // U+2800 is the offset
+  // This offset is the basis for calculating braille characters
+  const brailleCodePoint = 0x2800 + pipBinary;
   return String.fromCodePoint(brailleCodePoint);
 }
 
@@ -46,7 +49,7 @@ export function cellToUnicode(cell: Cell): string {
  * @param character The character to convert
  * @returns A string with a single alphabetic character or null if `character` is not a number.
  */
-function getNumberCharacter(character: string): string | null {
+export function getNumberCharacter(character: string): string | null {
   switch (character) {
     case "1":
       return "a";
@@ -78,7 +81,7 @@ function getNumberCharacter(character: string): string | null {
  * @param character The character to check
  * @returns True if `character` is uppercase, otherwise false.
  */
-function isUppercaseCharacter(character: string) {
+export function isUppercaseCharacter(character: string) {
   const charCode = character.charCodeAt(0);
   // check between "A" and "Z"
   return charCode >= 65 && charCode <= 90;
@@ -100,6 +103,9 @@ export function latinStringToCells(string: string): Array<Cell> {
       }
       character = numberCharacter;
     } else if (isUppercaseCharacter(character)) {
+      if (curState === "number") {
+        ret.push(BrailleModifiers.LETTER_SIGN);
+      }
       if (curState !== "uppercase") {
         const getOffsetOfEndOfUppercase = (
           string: string,
@@ -128,7 +134,7 @@ export function latinStringToCells(string: string): Array<Cell> {
       }
       character = character.toLowerCase();
     } else {
-      if (curState === "number") {
+      if (character != " " && curState === "number") {
         ret.push(BrailleModifiers.LETTER_SIGN);
         curState = null;
       }

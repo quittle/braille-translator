@@ -1,6 +1,6 @@
-import type { Cell } from "./braille";
+import type { Cell } from ".";
 
-export namespace BrailleModifiers {
+export module BrailleModifiers {
   export const UPPER_CASE_LETTER: Cell = [6];
   export const UPPER_CASE_WORD: [Cell, Cell] = [
     UPPER_CASE_LETTER,
