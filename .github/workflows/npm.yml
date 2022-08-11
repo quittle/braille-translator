@@ -28,6 +28,7 @@ jobs:
       - name: NVM Install
         run: |
           curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash
+          . $HOME/.nvm/nvm.sh
           nvm install
       - name: Build And Test
         run: |
