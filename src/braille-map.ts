@@ -7,6 +7,7 @@ export namespace BrailleModifiers {
     UPPER_CASE_LETTER,
   ];
   export const NUMBER: Cell = [3, 4, 5, 6];
+  export const LETTER_SIGN: Cell = [5, 6];
 }
 
 /** A mapping of latin characers to braille cells */

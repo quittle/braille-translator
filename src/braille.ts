@@ -87,16 +87,52 @@ function isUppercaseCharacter(character: string) {
 /** Converts a string of latin characters to an array of braille cells */
 export function latinStringToCells(string: string): Array<Cell> {
   const ret: Cell[] = [];
+
+  let curState: "number" | "uppercase" | null = null;
   for (let i = 0; i < string.length; i++) {
     let character = string.charAt(i);
 
     const numberCharacter = getNumberCharacter(character);
     if (numberCharacter !== null) {
-      ret.push(BrailleModifiers.NUMBER);
+      if (curState !== "number") {
+        ret.push(BrailleModifiers.NUMBER);
+        curState = "number";
+      }
       character = numberCharacter;
     } else if (isUppercaseCharacter(character)) {
-      ret.push(BrailleModifiers.UPPER_CASE_LETTER);
+      if (curState !== "uppercase") {
+        const getOffsetOfEndOfUppercase = (
+          string: string,
+          startingOffset: number
+        ): number | null => {
+          let offset = startingOffset;
+          while (offset < string.length) {
+            const curChar = string.charAt(offset);
+            if (curChar === " ") {
+              return offset;
+            }
+            if (!isUppercaseCharacter(curChar)) {
+              return null;
+            }
+            offset++;
+          }
+          return offset;
+        };
+        const endOfUppercaseOffset = getOffsetOfEndOfUppercase(string, i);
+        if (endOfUppercaseOffset == null || endOfUppercaseOffset - i <= 2) {
+          ret.push(BrailleModifiers.UPPER_CASE_LETTER);
+        } else {
+          curState = "uppercase";
+          ret.push(...BrailleModifiers.UPPER_CASE_WORD);
+        }
+      }
       character = character.toLowerCase();
+    } else {
+      if (curState === "number") {
+        ret.push(BrailleModifiers.LETTER_SIGN);
+        curState = null;
+      }
+      curState = null;
     }
 
     ret.push(BRAILLE_MAP[character] || "?");

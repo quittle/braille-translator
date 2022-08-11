@@ -17,7 +17,7 @@ export default function App() {
 
   return (
     <div className="App">
-      <h1>Vite + React</h1>
+      <h1>Braille Translator</h1>
       <input type="text" onChange={(e) => setMessage(e.currentTarget.value)} />
       <p>
         Here comes the braille...
