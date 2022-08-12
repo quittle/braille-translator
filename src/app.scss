@@ -15,6 +15,11 @@ main {
   margin: auto;
 }
 
+hr {
+  width: 100%;
+  border-color: theme.$PRIMARY_COLOR_HIGHLIGHT;
+}
+
 h1 {
   border-bottom: 0.3em solid theme.$PRIMARY_COLOR_HIGHLIGHT;
 }
@@ -32,21 +37,5 @@ button {
 
   &::placeholder {
     color: theme.$PRIMARY_FOREGROUND_COLOR_PLACEHOLDER;
-  }
-}
-
-#brailleTranslation {
-  $font-size: theme.$FONT_SIZE_SLIGHTLY_LARGER;
-  background: theme.$SECONDARY_BACKGROUND_COLOR;
-  color: theme.$SECONDARY_FOREGROUND_COLOR;
-  padding: 1em;
-  border-radius: theme.$SLIGHT_BORDER_RADIUS;
-  font-size: $font-size;
-
-  &::before {
-    display: inline-block;
-    height: $font-size;
-    content: "";
-    width: 0;
   }
 }

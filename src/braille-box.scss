@@ -1,0 +1,28 @@
+@use "./theme.scss";
+
+.braille-box {
+  $font-size: theme.$FONT_SIZE_SLIGHTLY_LARGER;
+
+  background: theme.$SECONDARY_BACKGROUND_COLOR;
+  color: theme.$SECONDARY_FOREGROUND_COLOR;
+  padding: 1em;
+  border-radius: theme.$SLIGHT_BORDER_RADIUS;
+  font-size: $font-size;
+  display: flex;
+  flex-direction: column;
+
+  button {
+    float: right;
+    display: flex;
+    justify-content: center;
+    gap: theme.$PADDING_TINY;
+
+    svg {
+      // The first path is a clear and the second path is the draw so color everything but the first
+      // path
+      path:nth-child(n + 2) {
+        fill: theme.$PRIMARY_FOREGROUND_COLOR;
+      }
+    }
+  }
+}
