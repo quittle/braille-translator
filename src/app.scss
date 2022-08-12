@@ -38,4 +38,15 @@ button {
   &::placeholder {
     color: theme.$PRIMARY_FOREGROUND_COLOR_PLACEHOLDER;
   }
+
+  &:disabled {
+    background: theme.$PRIMARY_BACKGROUND_COLOR_DISABLED;
+  }
+}
+
+button {
+  cursor: pointer;
+  &:disabled {
+    cursor: not-allowed;
+  }
 }

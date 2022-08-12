@@ -1,21 +1,13 @@
 import { cellToUnicode, latinStringToCells } from "./braille";
 import BrailleCharacter from "./braille-character";
 import "./braille-box.scss";
-import { ReactComponent as CopyIcon } from "./assets/icon-copy.svg";
+import CopyButton from "./copy-button";
 
 /**
  * Displays braille text
  */
 export default function BrailleBox(props: Readonly<{ text: string }>) {
   const textPips = latinStringToCells(props.text);
-
-  const copyToClipboard = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const brailleText = textPips.reduce(
-      (prevText, cell) => prevText + cellToUnicode(cell),
-      ""
-    );
-    navigator.clipboard.writeText(brailleText);
-  };
 
   return (
     <div className="braille-box">
@@ -25,13 +17,15 @@ export default function BrailleBox(props: Readonly<{ text: string }>) {
         ))}
       </div>
 
-      {props.text && navigator.clipboard && (
+      {props.text && CopyButton.isSupported() && (
         <>
           <hr />
-          <button onClick={copyToClipboard}>
-            <CopyIcon />
-            Copy
-          </button>
+          <CopyButton
+            textToCopy={textPips.reduce(
+              (prevText, cell) => prevText + cellToUnicode(cell),
+              ""
+            )}
+          />
         </>
       )}
     </div>

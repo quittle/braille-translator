@@ -1,9 +1,19 @@
 @use "colors.scss";
 @use "dimens.scss";
+@use "sass:color";
 
 // Colors
 $PRIMARY_BACKGROUND_COLOR: colors.$BRIGHT_PINK;
 $SECONDARY_BACKGROUND_COLOR: colors.$MAGENTA;
+
+$PRIMARY_BACKGROUND_COLOR_DISABLED: adjust-color(
+  $PRIMARY_BACKGROUND_COLOR,
+  $saturation: -50%
+);
+$SECONDARY_BACKGROUND_COLOR_DISABLED: adjust-color(
+  $SECONDARY_BACKGROUND_COLOR,
+  $saturation: -50%
+);
 
 $PRIMARY_FOREGROUND_COLOR: colors.$VIOLET;
 $SECONDARY_FOREGROUND_COLOR: colors.$LAVENDER;

@@ -1,0 +1,16 @@
+@use "./theme.scss";
+
+.copy-button {
+  display: flex;
+  justify-content: center;
+  gap: theme.$PADDING_TINY;
+  cursor: copy;
+
+  svg {
+    // The first path is a clear and the second path is the draw so color everything but the first
+    // path
+    path:nth-child(n + 2) {
+      fill: theme.$PRIMARY_FOREGROUND_COLOR;
+    }
+  }
+}
