@@ -1,13 +1,23 @@
 import { Cell, isValidCell, ValidCell } from "../braille";
-import { BrailleModifiers, BRAILLE_MAP } from "../braille-map";
+import {
+  BrailleModifiers,
+  BRAILLE_MAP,
+  BRAILLE_WORD_SIGNS,
+} from "../braille-map";
 
 describe("braille-map", () => {
   test.each([
     ...Object.entries(BRAILLE_MAP),
     ...Object.entries(BrailleModifiers),
+    ...Object.entries(BRAILLE_WORD_SIGNS),
   ])(
     "Validate all cells for %p",
-    (_name: string, cellOrCells: Cell | [Cell, Cell]) => {
+    (_name: string, cellOrCells: string | Cell | [Cell, Cell]) => {
+      if (typeof cellOrCells === "string") {
+        expect(Object.keys(BRAILLE_MAP)).toContain(cellOrCells);
+        return;
+      }
+
       const cells =
         cellOrCells.length > 0 && Array.isArray(cellOrCells[0])
           ? cellOrCells

@@ -40,3 +40,45 @@ export const BRAILLE_MAP: Readonly<{ [latinCharacter: string]: Cell }> = {
   z: [1, 3, 5, 6],
   " ": [],
 };
+
+/** A mapping of words to single-letter signs */
+export const BRAILLE_WORD_SIGNS: Readonly<{
+  [latinCharacter: string]: string | Cell;
+}> = {
+  // No a
+  but: "b",
+  can: "c",
+  do: "d",
+  every: "e",
+  from: "f",
+  go: "g",
+  have: "h",
+  // No i
+  just: "j",
+  knowledge: "k",
+  like: "l",
+  more: "m",
+  not: "n",
+  // No o
+  people: "p",
+  quite: "q",
+  rather: "r",
+  so: "s",
+  that: "t",
+  us: "u",
+  very: "v",
+  will: "w",
+  it: "x",
+  you: "y",
+  as: "z",
+  were: [2, 3, 5, 6],
+  still: [3, 4],
+  child: [1, 6],
+  shall: [1, 4, 6],
+  this: [1, 4, 5, 6],
+  which: [1, 5, 6],
+  out: [1, 2, 5, 6],
+  enough: [2, 6],
+  his: [2, 3, 6],
+  was: [3, 5, 6],
+};

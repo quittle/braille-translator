@@ -1,6 +1,7 @@
 import {
   cellToUnicode,
   getNumberCharacter,
+  getWordSign,
   isUppercaseCharacter,
   isValidCell,
   latinStringToCells,
@@ -146,5 +147,18 @@ describe("braille", () => {
         [1, 2, 4],
       ]);
     });
+  });
+
+  test("getWordSign", () => {
+    expect(getWordSign("abc")).toBeNull();
+    expect(getWordSign("do")).toEqual({
+      cell: [1, 4, 5],
+      length: 2,
+    });
+    expect(getWordSign("do not")).toEqual({
+      cell: [1, 4, 5],
+      length: 2,
+    });
+    expect(getWordSign("dont")).toBeNull();
   });
 });

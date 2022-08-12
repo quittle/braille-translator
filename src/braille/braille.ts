@@ -1,4 +1,8 @@
-import { BrailleModifiers, BRAILLE_MAP } from "./braille-map";
+import {
+  BrailleModifiers,
+  BRAILLE_MAP,
+  BRAILLE_WORD_SIGNS,
+} from "./braille-map";
 
 /** Represents a pip value, using the standard braille dot number system. */
 export type Pip = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -42,6 +46,38 @@ export function cellToUnicode(cell: Cell): string {
   // This offset is the basis for calculating braille characters
   const brailleCodePoint = 0x2800 + pipBinary;
   return String.fromCodePoint(brailleCodePoint);
+}
+
+/**
+ * Attempts to convert extract a wordsign from a string
+ * @param string The string to convert
+ * @returns `null` if a word sign does not fit. Otherwise, returns the cell for the wordsign and how
+ * many characters were consumed by the wordsign.
+ */
+export function getWordSign(
+  string: string
+): null | { cell: Cell; length: number } {
+  for (let i = 1; i < string.length; i++) {
+    const char = string.charAt(i);
+    if (char === " ") {
+      return null;
+    }
+    const possibleWord = string.substring(0, i + 1);
+    const possibleConversion = BRAILLE_WORD_SIGNS[possibleWord];
+    if (possibleConversion !== undefined) {
+      const cell =
+        typeof possibleConversion === "string"
+          ? BRAILLE_MAP[possibleConversion]
+          : possibleConversion;
+      if (i == string.length - 1 || string[i + 1] === " ") {
+        return {
+          length: i + 1,
+          cell: cell,
+        };
+      }
+    }
+  }
+  return null;
 }
 
 /**
@@ -138,6 +174,14 @@ export function latinStringToCells(string: string): Array<Cell> {
         ret.push(BrailleModifiers.LETTER_SIGN);
         curState = null;
       }
+
+      const wordSign = getWordSign(string.substring(i));
+      if (wordSign !== null) {
+        ret.push(wordSign.cell);
+        i += wordSign.length;
+        continue;
+      }
+
       curState = null;
     }
 
