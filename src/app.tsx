@@ -16,14 +16,19 @@ export default function App() {
   ));
 
   return (
-    <div className="App">
+    <main className="App">
       <h1>Braille Translator</h1>
-      <input type="text" onChange={(e) => setMessage(e.currentTarget.value)} />
+      <input
+        type="text"
+        onChange={(e) => setMessage(e.currentTarget.value)}
+        placeholder="Type text to translate..."
+      />
       <p>
-        Here comes the braille...
+        Unified English Braille appears here...
+        <br />
         <br />
         <div id="brailleTranslation"> {brailleCharacters} </div>
       </p>
-    </div>
+    </main>
   );
 }
