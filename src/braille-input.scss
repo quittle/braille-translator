@@ -1,0 +1,46 @@
+@use "./theme.scss";
+@use "sass:math";
+
+.braille-input {
+  display: flex;
+  justify-content: space-between;
+  aspect-ratio: 1/1;
+  gap: 5%;
+
+  $pip-gap: 5%;
+  & > span {
+    aspect-ratio: 2/3;
+    display: flex;
+    column-count: 2;
+    flex-direction: column;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: $pip-gap;
+  }
+
+  .pip {
+    display: inline-block;
+    border-radius: theme.$MAX_BORDER_RADIUS;
+    border: theme.$BORDER_WIDTH_TINY solid theme.$PRIMARY_FOREGROUND_COLOR;
+    appearance: none;
+    font-size: 0.5em;
+    font-size: 30%;
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    width: 50% - ($pip-gap);
+    height: 33.333333% - (2 * math.div($pip-gap, 3));
+
+    &:checked {
+      background: theme.$PRIMARY_FOREGROUND_COLOR;
+    }
+  }
+
+  & > button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    width: 100%;
+  }
+}

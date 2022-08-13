@@ -21,14 +21,41 @@ export type ValidCell =
   | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip, Pip]>
   | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip, Pip, Pip]>;
 
+/**
+ * Attempts to parse a pip array into a `Cell`
+ * @param pips The pip values
+ * @returns The input array if it's a valid cell. If invalid, returns null.
+ */
+export function _tryParseCell(pips: ReadonlyArray<number>): Cell | null {
+  // Can only include up to 8 pips
+  if (pips.length > 8) {
+    return null;
+  }
+
+  // All pips must be between 1 and 8, inclusive, and be integers
+  if (
+    pips.find((value) => value < 1 || value > 8 || !Number.isInteger(value)) !==
+    undefined
+  ) {
+    return null;
+  }
+
+  // Duplicate entries aren't allowed
+  if (new Set(pips).size != pips.length) {
+    return null;
+  }
+
+  return pips as Cell;
+}
+
 /** Determines if a cell is valid or not */
-export function isValidCell(cell: Cell): cell is ValidCell {
+export function _isValidCell(cell: Cell): cell is ValidCell {
   return cell !== "?";
 }
 
 /** Converts a cell to the uincode codepoint representing the cell */
-export function cellToUnicode(cell: Cell): string {
-  if (!isValidCell(cell)) {
+export function _cellToUnicode(cell: Cell): string {
+  if (!_isValidCell(cell)) {
     return cell;
   }
 
@@ -124,7 +151,7 @@ export function isUppercaseCharacter(character: string) {
 }
 
 /** Converts a string of latin characters to an array of braille cells */
-export function latinStringToCells(string: string): Array<Cell> {
+export function _latinStringToCells(string: string): Array<Cell> {
   const ret: Cell[] = [];
 
   let curState: "number" | "uppercase" | null = null;

@@ -1,4 +1,4 @@
-import { Cell, isValidCell, ValidCell } from "../braille";
+import { Cell, _isValidCell as isValidCell, ValidCell } from "../braille";
 import {
   BrailleModifiers,
   BRAILLE_MAP,
@@ -11,7 +11,7 @@ describe("braille-map", () => {
     ...Object.entries(BrailleModifiers),
     ...Object.entries(BRAILLE_WORD_SIGNS),
   ])(
-    "Validate all cells for %p",
+    "validate all cells for %p",
     (_name: string, cellOrCells: string | Cell | [Cell, Cell]) => {
       if (typeof cellOrCells === "string") {
         expect(Object.keys(BRAILLE_MAP)).toContain(cellOrCells);
@@ -36,7 +36,7 @@ describe("braille-map", () => {
     }
   );
 
-  test("Unique latin characters", () => {
+  test("unique latin characters", () => {
     const allCells: readonly Cell[] = Object.values(BRAILLE_MAP);
     for (let i = 0; i < allCells.length; i++) {
       const cell = allCells[i];

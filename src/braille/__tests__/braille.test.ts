@@ -1,10 +1,13 @@
 import {
   cellToUnicode,
+  isValidCell,
+  latinStringToCells,
+  tryParseCell,
+} from "../";
+import {
   getNumberCharacter,
   getWordSign,
   isUppercaseCharacter,
-  isValidCell,
-  latinStringToCells,
 } from "../braille";
 
 const BRAILLE_SPACE = "⠀";
@@ -17,24 +20,20 @@ describe("braille", () => {
   });
 
   test("cellToUnicode", () => {
-    expect(BRAILLE_SPACE).not.toStrictEqual(" ");
-    expect(BRAILLE_SPACE.charCodeAt(0)).toEqual(0x2800);
-    expect(cellToUnicode([])).toEqual(BRAILLE_SPACE);
-  });
-
-  test("cellToUnicode", () => {
-    expect(BRAILLE_SPACE).not.toStrictEqual(" ");
-    expect(BRAILLE_SPACE.charCodeAt(0)).toEqual(0x2800);
-    expect(cellToUnicode([])).toEqual(BRAILLE_SPACE);
+    expect(BRAILLE_SPACE).not.toBe(" ");
+    expect(BRAILLE_SPACE.charCodeAt(0)).toBe(0x2800);
+    expect(cellToUnicode([])).toStrictEqual(BRAILLE_SPACE);
+    expect(cellToUnicode([1])).toBe("⠁");
+    expect(cellToUnicode([1, 2, 3, 5])).toBe("⠗");
   });
 
   test("getNumberCharacter", () => {
-    expect(getNumberCharacter("1")).toStrictEqual("a");
-    expect(getNumberCharacter("8")).toStrictEqual("h");
-    expect(getNumberCharacter("0")).toStrictEqual("j");
+    expect(getNumberCharacter("1")).toBe("a");
+    expect(getNumberCharacter("8")).toBe("h");
+    expect(getNumberCharacter("0")).toBe("j");
 
-    expect(getNumberCharacter("a")).toStrictEqual(null);
-    expect(getNumberCharacter("")).toStrictEqual(null);
+    expect(getNumberCharacter("a")).toBeNull();
+    expect(getNumberCharacter("")).toBeNull();
   });
 
   test("isUppercaseCharacter", () => {
@@ -47,17 +46,17 @@ describe("braille", () => {
 
   describe("latinStringToCells", () => {
     test("empty", () => {
-      expect(latinStringToCells("")).toEqual([]);
+      expect(latinStringToCells("")).toStrictEqual([]);
     });
 
     test("space", () => {
-      expect(latinStringToCells(" ")).toEqual([[]]);
+      expect(latinStringToCells(" ")).toStrictEqual([[]]);
     });
 
     test("lowercase letters", () => {
-      expect(latinStringToCells("a")).toEqual([[1]]);
-      expect(latinStringToCells("abc")).toEqual([[1], [1, 2], [1, 4]]);
-      expect(latinStringToCells("a b c")).toEqual([
+      expect(latinStringToCells("a")).toStrictEqual([[1]]);
+      expect(latinStringToCells("abc")).toStrictEqual([[1], [1, 2], [1, 4]]);
+      expect(latinStringToCells("a b c")).toStrictEqual([
         [1],
         [],
         [1, 2],
@@ -67,15 +66,15 @@ describe("braille", () => {
     });
 
     test("uppercase letters", () => {
-      expect(latinStringToCells("A")).toEqual([[6], [1]]);
-      expect(latinStringToCells("ABC")).toEqual([
+      expect(latinStringToCells("A")).toStrictEqual([[6], [1]]);
+      expect(latinStringToCells("ABC")).toStrictEqual([
         [6],
         [6],
         [1],
         [1, 2],
         [1, 4],
       ]);
-      expect(latinStringToCells("A B C")).toEqual([
+      expect(latinStringToCells("A B C")).toStrictEqual([
         [6],
         [1],
         [],
@@ -86,9 +85,9 @@ describe("braille", () => {
         [1, 4],
       ]);
 
-      expect(latinStringToCells("AB")).toEqual([[6], [1], [6], [1, 2]]);
+      expect(latinStringToCells("AB")).toStrictEqual([[6], [1], [6], [1, 2]]);
 
-      expect(latinStringToCells("ABC DEF")).toEqual([
+      expect(latinStringToCells("ABC DEF")).toStrictEqual([
         [6],
         [6],
         [1],
@@ -106,14 +105,14 @@ describe("braille", () => {
     });
 
     test("numbers", () => {
-      expect(latinStringToCells("1")).toEqual([[3, 4, 5, 6], [1]]);
-      expect(latinStringToCells("123")).toEqual([
+      expect(latinStringToCells("1")).toStrictEqual([[3, 4, 5, 6], [1]]);
+      expect(latinStringToCells("123")).toStrictEqual([
         [3, 4, 5, 6],
         [1],
         [1, 2],
         [1, 4],
       ]);
-      expect(latinStringToCells("1 2 3")).toEqual([
+      expect(latinStringToCells("1 2 3")).toStrictEqual([
         [3, 4, 5, 6],
         [1],
         [],
@@ -126,7 +125,7 @@ describe("braille", () => {
     });
 
     test("letter number mix", () => {
-      expect(latinStringToCells("abc123DEF")).toEqual([
+      expect(latinStringToCells("abc123DEF")).toStrictEqual([
         // abc
         [1],
         [1, 2],
@@ -151,14 +150,32 @@ describe("braille", () => {
 
   test("getWordSign", () => {
     expect(getWordSign("abc")).toBeNull();
-    expect(getWordSign("do")).toEqual({
+    expect(getWordSign("do")).toStrictEqual({
       cell: [1, 4, 5],
       length: 2,
     });
-    expect(getWordSign("do not")).toEqual({
+    expect(getWordSign("do not")).toStrictEqual({
       cell: [1, 4, 5],
       length: 2,
     });
     expect(getWordSign("dont")).toBeNull();
+  });
+
+  test("tryParseCell", () => {
+    expect(tryParseCell([])).toStrictEqual([]);
+    expect(tryParseCell([1, 3, 6])).toStrictEqual([1, 3, 6]);
+    expect(tryParseCell([1, 2, 3, 4, 5, 6, 7, 8])).toStrictEqual([
+      1, 2, 3, 4, 5, 6, 7, 8,
+    ]);
+
+    expect(tryParseCell([-1, 2, 3])).toBeNull();
+    expect(tryParseCell([1.2, 3])).toBeNull();
+    expect(tryParseCell([1, 1, 2])).toBeNull();
+    expect(tryParseCell([1, 2, 3, 9])).toBeNull();
+    expect(tryParseCell([0, 1, 2])).toBeNull();
+
+    const originalCell = [1, 2, 3];
+    const returnedCell = tryParseCell(originalCell);
+    expect(originalCell).toBe(returnedCell);
   });
 });

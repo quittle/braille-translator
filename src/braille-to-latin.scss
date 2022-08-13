@@ -1,0 +1,38 @@
+@use "./theme.scss";
+
+.braille-to-latin {
+  display: flex;
+  gap: theme.$PADDING_MEDIUM;
+  align-items: stretch;
+
+  .input-wrapper {
+    width: 5em;
+    display: inline-block;
+  }
+
+  .braille-output {
+    font-size: theme.$FONT_SIZE_HUGE;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: theme.$SECONDARY_BACKGROUND_COLOR;
+    color: theme.$SECONDARY_FOREGROUND_COLOR;
+    border-radius: theme.$SLIGHT_BORDER_RADIUS;
+    width: 100%;
+    line-height: 1em;
+    padding: theme.$PADDING_SMALL;
+
+    button {
+      padding: theme.$PADDING_TINY;
+      display: flex;
+      align-items: center;
+      height: 2em;
+
+      svg {
+        path {
+          fill: theme.$PRIMARY_FOREGROUND_COLOR;
+        }
+      }
+    }
+  }
+}

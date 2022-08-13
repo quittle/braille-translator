@@ -41,7 +41,7 @@ export default function CopyButton(props: Readonly<{ textToCopy: string }>) {
       disabled={recentlyCopied}
     >
       <CopyIcon />
-      {recentlyCopied ? "Copied!" : "Copy"}
+      {recentlyCopied ? "Copied to clipboard!" : "Copy"}
     </button>
   );
 }
