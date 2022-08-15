@@ -1,4 +1,9 @@
-import { BRAILLE_MAP, BRAILLE_WORD_SIGNS } from "./braille-map";
+import { getKeyByValue } from "../utils";
+import {
+  BRAILLE_MAP,
+  BRAILLE_WORD_SIGNS,
+  NUMBER_LETTER_MAPPING,
+} from "./braille-map";
 import * as BrailleModifiers from "./braille-modifiers";
 
 /** Represents a pip value, using the standard braille dot number system. */
@@ -126,34 +131,11 @@ export function getWordSign(
 
 /**
  * Converts a number literal to the braille alphabetic character equivalent.
- * @param character The character to convert
+ * @param numberCharacter The number (as a string) to convert
  * @returns A string with a single alphabetic character or null if `character` is not a number.
  */
-export function getNumberCharacter(character: string): string | null {
-  switch (character) {
-    case "1":
-      return "a";
-    case "2":
-      return "b";
-    case "3":
-      return "c";
-    case "4":
-      return "d";
-    case "5":
-      return "e";
-    case "6":
-      return "f";
-    case "7":
-      return "g";
-    case "8":
-      return "h";
-    case "9":
-      return "i";
-    case "0":
-      return "j";
-    default:
-      return null;
-  }
+export function getNumberCharacter(numberCharacter: string): string | null {
+  return NUMBER_LETTER_MAPPING[numberCharacter] ?? null;
 }
 
 /**
@@ -235,20 +217,89 @@ export function _latinStringToCells(string: string): Array<Cell> {
 }
 
 /**
+ * Checks if a cell is a space
+ * @param cell The cell to check.
+ * @returns `true` if the cell is a space, otherwise returns `false`.
+ */
+function isSpaceCell(cell: Cell): boolean {
+  return cellsEqual(BRAILLE_MAP[" "], cell);
+}
+
+/**
+ * Determines if the cell at `offset` in `braille` can be considered a word
+ * @param braille The full braille text
+ * @param offset The offset into the braille text
+ * @returns `true` if at a boundary or the beginning or end of the word. Otherwise `false`.
+ */
+function isCellAtWordBoundary(
+  braille: ReadonlyArray<Cell>,
+  offset: number
+): boolean {
+  if (offset !== 0 && !isSpaceCell(braille[offset - 1])) {
+    return false;
+  }
+
+  if (offset != braille.length - 1 && !isSpaceCell(braille[offset + 1])) {
+    return false;
+  }
+  return true;
+}
+
+/**
  * Converts an array of braille cells to text.
  * @param braille The braille to convert
  * @returns The translated text. `?` are substituted for unrecognized cells.
  */
 export function _cellsToText(braille: readonly Cell[]): Array<[string, Cell]> {
   const ret: Array<[string, Cell]> = [];
+
+  let state: "number" | null = null;
   for (let i = 0; i < braille.length; i++) {
     const inputCell = braille[i];
-    const match = Object.entries(BRAILLE_MAP).find(([_text, cell]) =>
+
+    const char = getKeyByValue(BRAILLE_MAP, (cell) =>
       cellsEqual(inputCell, cell)
     );
 
-    if (match) {
-      ret.push(match);
+    if (char) {
+      if (char === " ") {
+        state = null;
+      } else if (state === "number") {
+        const number = getKeyByValue(NUMBER_LETTER_MAPPING, char);
+        if (number === null) {
+          ret.push(["?", inputCell]);
+        } else {
+          ret.push([number, inputCell]);
+        }
+        continue;
+      }
+      if (isCellAtWordBoundary(braille, i)) {
+        const wordsign = getKeyByValue(BRAILLE_WORD_SIGNS, (stringOrCell) => {
+          const cell =
+            typeof stringOrCell === "string"
+              ? BRAILLE_MAP[stringOrCell]
+              : stringOrCell;
+
+          return cellsEqual(cell, inputCell);
+        });
+        if (wordsign !== null) {
+          ret.push([wordsign, inputCell]);
+          continue;
+        }
+      }
+      ret.push([char, inputCell]);
+      continue;
+    }
+
+    if (cellsEqual(inputCell, BrailleModifiers.NUMBER)) {
+      state = "number";
+      ret.push(["", inputCell]);
+      continue;
+    }
+
+    if (cellsEqual(inputCell, BrailleModifiers.LETTER_SIGN)) {
+      state = null;
+      ret.push(["", inputCell]);
       continue;
     }
 

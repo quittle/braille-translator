@@ -3,6 +3,7 @@ import {
   isValidCell,
   latinStringToCells,
   tryParseCell,
+  cellsToText,
 } from "../";
 import {
   getNumberCharacter,
@@ -177,5 +178,49 @@ describe("braille", () => {
     const originalCell = [1, 2, 3];
     const returnedCell = tryParseCell(originalCell);
     expect(originalCell).toBe(returnedCell);
+  });
+
+  describe("cellsToText", () => {
+    test("empty", () => {
+      expect(cellsToText([])).toStrictEqual([]);
+    });
+
+    test("simple", () => {
+      expect(cellsToText([[1]])).toStrictEqual([["a", [1]]]);
+      expect(cellsToText([[]])).toStrictEqual([[" ", []]]);
+      expect(cellsToText([[1, 3, 5]])).toStrictEqual([["o", [1, 3, 5]]]);
+    });
+
+    test("number", () => {
+      expect(cellsToText([[3, 4, 5, 6]])).toStrictEqual([["", [3, 4, 5, 6]]]);
+      expect(cellsToText([[3, 4, 5, 6], [1]])).toStrictEqual([
+        ["", [3, 4, 5, 6]],
+        ["1", [1]],
+      ]);
+      expect(cellsToText([[3, 4, 5, 6], [1], [1, 2]])).toStrictEqual([
+        ["", [3, 4, 5, 6]],
+        ["1", [1]],
+        ["2", [1, 2]],
+      ]);
+    });
+
+    test("wordsign", () => {
+      expect(cellsToText([[1, 2]])).toStrictEqual([["but", [1, 2]]]);
+      expect(cellsToText([[1, 2], [1]])).toStrictEqual([
+        ["b", [1, 2]],
+        ["a", [1]],
+      ]);
+      expect(cellsToText([[1, 2], [], [1]])).toStrictEqual([
+        ["but", [1, 2]],
+        [" ", []],
+        ["a", [1]],
+      ]);
+      expect(cellsToText([[1, 2], [1], [], [1, 4]])).toStrictEqual([
+        ["b", [1, 2]],
+        ["a", [1]],
+        [" ", []],
+        ["can", [1, 4]],
+      ]);
+    });
   });
 });

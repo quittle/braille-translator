@@ -72,3 +72,16 @@ export const BRAILLE_WORD_SIGNS: Readonly<{
   his: [2, 3, 6],
   was: [3, 5, 6],
 };
+
+export const NUMBER_LETTER_MAPPING: Readonly<{ [number: string]: string }> = {
+  "1": "a",
+  "2": "b",
+  "3": "c",
+  "4": "d",
+  "5": "e",
+  "6": "f",
+  "7": "g",
+  "8": "h",
+  "9": "i",
+  "0": "j",
+};
