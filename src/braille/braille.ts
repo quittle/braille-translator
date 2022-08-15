@@ -1,8 +1,5 @@
-import {
-  BrailleModifiers,
-  BRAILLE_MAP,
-  BRAILLE_WORD_SIGNS,
-} from "./braille-map";
+import { BRAILLE_MAP, BRAILLE_WORD_SIGNS } from "./braille-map";
+import * as BrailleModifiers from "./braille-modifiers";
 
 /** Represents a pip value, using the standard braille dot number system. */
 export type Pip = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
@@ -20,6 +17,26 @@ export type ValidCell =
   | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip]>
   | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip, Pip]>
   | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip, Pip, Pip]>;
+
+/**
+ * Determines if two cells are equal. Note, this assumes the cell pips are both sorted.
+ * @param a The first cell to compare
+ * @param b The second cell to compare
+ * @returns `true` if both cells are identical. `false otherwise.
+ */
+export function cellsEqual(a: Cell, b: Cell): boolean {
+  if (a.length != b.length) {
+    return false;
+  }
+
+  for (let i = 0; i < a.length; i++) {
+    if (a[i] != b[i]) {
+      return false;
+    }
+  }
+
+  return true;
+}
 
 /**
  * Attempts to parse a pip array into a `Cell`
@@ -213,6 +230,29 @@ export function _latinStringToCells(string: string): Array<Cell> {
     }
 
     ret.push(BRAILLE_MAP[character] || "?");
+  }
+  return ret;
+}
+
+/**
+ * Converts an array of braille cells to text.
+ * @param braille The braille to convert
+ * @returns The translated text. `?` are substituted for unrecognized cells.
+ */
+export function _cellsToText(braille: readonly Cell[]): Array<[string, Cell]> {
+  const ret: Array<[string, Cell]> = [];
+  for (let i = 0; i < braille.length; i++) {
+    const inputCell = braille[i];
+    const match = Object.entries(BRAILLE_MAP).find(([_text, cell]) =>
+      cellsEqual(inputCell, cell)
+    );
+
+    if (match) {
+      ret.push(match);
+      continue;
+    }
+
+    ret.push(["?", inputCell]);
   }
   return ret;
 }

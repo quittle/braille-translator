@@ -10,17 +10,50 @@
     display: inline-block;
   }
 
-  .braille-output {
-    font-size: theme.$FONT_SIZE_HUGE;
+  .braille-output-wrapper {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    font-size: theme.$FONT_SIZE_HUGE;
     background: theme.$SECONDARY_BACKGROUND_COLOR;
     color: theme.$SECONDARY_FOREGROUND_COLOR;
     border-radius: theme.$SLIGHT_BORDER_RADIUS;
     width: 100%;
     line-height: 1em;
     padding: theme.$PADDING_SMALL;
+    font-family: theme.$FONT_FAMILY_MONOSPACE;
+
+    table {
+      border-collapse: collapse;
+    }
+
+    tr {
+      vertical-align: top;
+
+      &:first-child td {
+        border-bottom: theme.$BORDER_WIDTH_TINY solid
+          theme.$SECONDARY_COLOR_HIGHLIGHT;
+      }
+    }
+
+    td {
+      border-collapse: collapse;
+      border-right: theme.$BORDER_WIDTH_TINY solid
+        theme.$SECONDARY_COLOR_HIGHLIGHT;
+
+      &:first-child {
+        border-left: theme.$BORDER_WIDTH_TINY solid
+          theme.$SECONDARY_COLOR_HIGHLIGHT;
+      }
+    }
+
+    .braille-output {
+      margin-right: auto;
+      text-align: center;
+    }
+
+    .text-output {
+      padding: 0;
+    }
 
     button {
       padding: theme.$PADDING_TINY;

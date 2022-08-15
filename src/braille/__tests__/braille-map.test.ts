@@ -1,9 +1,6 @@
 import { Cell, _isValidCell as isValidCell, ValidCell } from "../braille";
-import {
-  BrailleModifiers,
-  BRAILLE_MAP,
-  BRAILLE_WORD_SIGNS,
-} from "../braille-map";
+import { BRAILLE_MAP, BRAILLE_WORD_SIGNS } from "../braille-map";
+import * as BrailleModifiers from "../braille-modifiers";
 
 describe("braille-map", () => {
   test.each([

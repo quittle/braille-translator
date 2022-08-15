@@ -1,15 +1,5 @@
 import type { Cell } from ".";
 
-export module BrailleModifiers {
-  export const UPPER_CASE_LETTER: Cell = [6];
-  export const UPPER_CASE_WORD: [Cell, Cell] = [
-    UPPER_CASE_LETTER,
-    UPPER_CASE_LETTER,
-  ];
-  export const NUMBER: Cell = [3, 4, 5, 6];
-  export const LETTER_SIGN: Cell = [5, 6];
-}
-
 /** A mapping of latin characers to braille cells */
 export const BRAILLE_MAP: Readonly<{ [latinCharacter: string]: Cell }> = {
   a: [1],

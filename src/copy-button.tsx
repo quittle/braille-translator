@@ -1,4 +1,3 @@
-import "./braille-box.scss";
 import { ReactComponent as CopyIcon } from "./assets/icon-copy.svg";
 import { useEffect, useState } from "react";
 import { usePrevious } from "./effects";
