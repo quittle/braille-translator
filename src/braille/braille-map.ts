@@ -1,5 +1,7 @@
 import type { Cell } from ".";
 
+export type LatinToCellMapping = Readonly<{ [latinCharacter: string]: Cell }>;
+
 /** A mapping of latin characers to braille cells */
 export const BRAILLE_MAP: Readonly<{ [latinCharacter: string]: Cell }> = {
   a: [1],
@@ -32,35 +34,33 @@ export const BRAILLE_MAP: Readonly<{ [latinCharacter: string]: Cell }> = {
 };
 
 /** A mapping of words to single-letter signs */
-export const BRAILLE_WORD_SIGNS: Readonly<{
-  [latinCharacter: string]: string | Cell;
-}> = {
+export const BRAILLE_WORD_SIGNS: LatinToCellMapping = {
   // No a
-  but: "b",
-  can: "c",
-  do: "d",
-  every: "e",
-  from: "f",
-  go: "g",
-  have: "h",
+  but: BRAILLE_MAP["b"],
+  can: BRAILLE_MAP["c"],
+  do: BRAILLE_MAP["d"],
+  every: BRAILLE_MAP["e"],
+  from: BRAILLE_MAP["f"],
+  go: BRAILLE_MAP["g"],
+  have: BRAILLE_MAP["h"],
   // No i
-  just: "j",
-  knowledge: "k",
-  like: "l",
-  more: "m",
-  not: "n",
+  just: BRAILLE_MAP["j"],
+  knowledge: BRAILLE_MAP["k"],
+  like: BRAILLE_MAP["l"],
+  more: BRAILLE_MAP["m"],
+  not: BRAILLE_MAP["n"],
   // No o
-  people: "p",
-  quite: "q",
-  rather: "r",
-  so: "s",
-  that: "t",
-  us: "u",
-  very: "v",
-  will: "w",
-  it: "x",
-  you: "y",
-  as: "z",
+  people: BRAILLE_MAP["p"],
+  quite: BRAILLE_MAP["q"],
+  rather: BRAILLE_MAP["r"],
+  so: BRAILLE_MAP["s"],
+  that: BRAILLE_MAP["t"],
+  us: BRAILLE_MAP["u"],
+  very: BRAILLE_MAP["v"],
+  will: BRAILLE_MAP["w"],
+  it: BRAILLE_MAP["x"],
+  you: BRAILLE_MAP["y"],
+  as: BRAILLE_MAP["z"],
   were: [2, 3, 5, 6],
   still: [3, 4],
   child: [1, 6],
@@ -84,4 +84,9 @@ export const NUMBER_LETTER_MAPPING: Readonly<{ [number: string]: string }> = {
   "8": "h",
   "9": "i",
   "0": "j",
+};
+
+export const ANYWHERE_LOWER_GROUP_SIGNS: LatinToCellMapping = {
+  en: [2, 6],
+  in: [3, 5],
 };

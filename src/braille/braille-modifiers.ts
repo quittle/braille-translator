@@ -1,4 +1,4 @@
-import { Cell } from "./braille";
+import type { Cell } from "./cell";
 
 export const UPPER_CASE_LETTER: Cell = [6];
 export const UPPER_CASE_WORD: [Cell, Cell] = [

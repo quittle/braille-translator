@@ -222,5 +222,17 @@ describe("braille", () => {
         ["can", [1, 4]],
       ]);
     });
+
+    test("groupsign", () => {
+      expect(cellsToText([[2, 6]])).toStrictEqual([["en", [2, 6]]]);
+      expect(cellsToText([[1], [2, 6]])).toStrictEqual([
+        ["a", [1]],
+        ["en", [2, 6]],
+      ]);
+      expect(cellsToText([[3, 5], [1]])).toStrictEqual([
+        ["in", [3, 5]],
+        ["a", [1]],
+      ]);
+    });
   });
 });

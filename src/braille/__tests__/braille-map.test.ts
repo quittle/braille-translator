@@ -1,5 +1,9 @@
-import { Cell, _isValidCell as isValidCell, ValidCell } from "../braille";
-import { BRAILLE_MAP, BRAILLE_WORD_SIGNS } from "../braille-map";
+import { Cell, isValidCell, ValidCell } from "../";
+import {
+  ANYWHERE_LOWER_GROUP_SIGNS,
+  BRAILLE_MAP,
+  BRAILLE_WORD_SIGNS,
+} from "../braille-map";
 import * as BrailleModifiers from "../braille-modifiers";
 
 describe("braille-map", () => {
@@ -7,9 +11,10 @@ describe("braille-map", () => {
     ...Object.entries(BRAILLE_MAP),
     ...Object.entries(BrailleModifiers),
     ...Object.entries(BRAILLE_WORD_SIGNS),
+    ...Object.entries(ANYWHERE_LOWER_GROUP_SIGNS),
   ])(
     "validate all cells for %p",
-    (_name: string, cellOrCells: string | Cell | [Cell, Cell]) => {
+    (_name: string, cellOrCells: Cell | [Cell, Cell]) => {
       if (typeof cellOrCells === "string") {
         expect(Object.keys(BRAILLE_MAP)).toContain(cellOrCells);
         return;

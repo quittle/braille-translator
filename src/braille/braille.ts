@@ -3,81 +3,14 @@ import {
   BRAILLE_MAP,
   BRAILLE_WORD_SIGNS,
   NUMBER_LETTER_MAPPING,
+  ANYWHERE_LOWER_GROUP_SIGNS,
 } from "./braille-map";
 import * as BrailleModifiers from "./braille-modifiers";
-
-/** Represents a pip value, using the standard braille dot number system. */
-export type Pip = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
-export type InvalidCell = "?";
-/** Represents a single character as either invalid or valid pips */
-export type Cell = InvalidCell | ValidCell;
-/** All possible valid pips in a c  */
-export type ValidCell =
-  | Readonly<[]>
-  | Readonly<[Pip]>
-  | Readonly<[Pip, Pip]>
-  | Readonly<[Pip, Pip, Pip]>
-  | Readonly<[Pip, Pip, Pip, Pip]>
-  | Readonly<[Pip, Pip, Pip, Pip, Pip]>
-  | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip]>
-  | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip, Pip]>
-  | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip, Pip, Pip]>;
-
-/**
- * Determines if two cells are equal. Note, this assumes the cell pips are both sorted.
- * @param a The first cell to compare
- * @param b The second cell to compare
- * @returns `true` if both cells are identical. `false otherwise.
- */
-export function cellsEqual(a: Cell, b: Cell): boolean {
-  if (a.length != b.length) {
-    return false;
-  }
-
-  for (let i = 0; i < a.length; i++) {
-    if (a[i] != b[i]) {
-      return false;
-    }
-  }
-
-  return true;
-}
-
-/**
- * Attempts to parse a pip array into a `Cell`
- * @param pips The pip values
- * @returns The input array if it's a valid cell. If invalid, returns null.
- */
-export function _tryParseCell(pips: ReadonlyArray<number>): Cell | null {
-  // Can only include up to 8 pips
-  if (pips.length > 8) {
-    return null;
-  }
-
-  // All pips must be between 1 and 8, inclusive, and be integers
-  if (
-    pips.find((value) => value < 1 || value > 8 || !Number.isInteger(value)) !==
-    undefined
-  ) {
-    return null;
-  }
-
-  // Duplicate entries aren't allowed
-  if (new Set(pips).size != pips.length) {
-    return null;
-  }
-
-  return pips as Cell;
-}
-
-/** Determines if a cell is valid or not */
-export function _isValidCell(cell: Cell): cell is ValidCell {
-  return cell !== "?";
-}
+import { Cell, cellsEqual, isValidCell, Pip } from "./cell";
 
 /** Converts a cell to the uincode codepoint representing the cell */
 export function _cellToUnicode(cell: Cell): string {
-  if (!_isValidCell(cell)) {
+  if (!isValidCell(cell)) {
     return cell;
   }
 
@@ -112,16 +45,12 @@ export function getWordSign(
       return null;
     }
     const possibleWord = string.substring(0, i + 1);
-    const possibleConversion = BRAILLE_WORD_SIGNS[possibleWord];
-    if (possibleConversion !== undefined) {
-      const cell =
-        typeof possibleConversion === "string"
-          ? BRAILLE_MAP[possibleConversion]
-          : possibleConversion;
+    const possibleCell = BRAILLE_WORD_SIGNS[possibleWord];
+    if (possibleCell !== undefined) {
       if (i == string.length - 1 || string[i + 1] === " ") {
         return {
           length: i + 1,
-          cell: cell,
+          cell: possibleCell,
         };
       }
     }
@@ -217,6 +146,17 @@ export function _latinStringToCells(string: string): Array<Cell> {
 }
 
 /**
+ * Attempts to convert a cell into a group sign.
+ * @param cell The cell to convert
+ * @returns The latin string representation of the groupsign or `null` if not a group sign.
+ */
+function tryGroupSign(cell: Cell): string | null {
+  return getKeyByValue(ANYWHERE_LOWER_GROUP_SIGNS, (groupSignCell) =>
+    cellsEqual(cell, groupSignCell)
+  );
+}
+
+/**
  * Checks if a cell is a space
  * @param cell The cell to check.
  * @returns `true` if the cell is a space, otherwise returns `false`.
@@ -274,12 +214,7 @@ export function _cellsToText(braille: readonly Cell[]): Array<[string, Cell]> {
         continue;
       }
       if (isCellAtWordBoundary(braille, i)) {
-        const wordsign = getKeyByValue(BRAILLE_WORD_SIGNS, (stringOrCell) => {
-          const cell =
-            typeof stringOrCell === "string"
-              ? BRAILLE_MAP[stringOrCell]
-              : stringOrCell;
-
+        const wordsign = getKeyByValue(BRAILLE_WORD_SIGNS, (cell) => {
           return cellsEqual(cell, inputCell);
         });
         if (wordsign !== null) {
@@ -303,6 +238,12 @@ export function _cellsToText(braille: readonly Cell[]): Array<[string, Cell]> {
       continue;
     }
 
+    const maybeGroupSign = tryGroupSign(inputCell);
+    if (maybeGroupSign !== null) {
+      ret.push([maybeGroupSign, inputCell]);
+      continue;
+    }
+    console.log("whoops");
     ret.push(["?", inputCell]);
   }
   return ret;
