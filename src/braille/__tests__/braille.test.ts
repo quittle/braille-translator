@@ -2,8 +2,8 @@ import {
   cellToUnicode,
   isValidCell,
   latinStringToCells,
-  tryParseCell,
   cellsToText,
+  Cell,
 } from "../";
 import {
   getNumberCharacter,
@@ -162,24 +162,6 @@ describe("braille", () => {
     expect(getWordSign("dont")).toBeNull();
   });
 
-  test("tryParseCell", () => {
-    expect(tryParseCell([])).toStrictEqual([]);
-    expect(tryParseCell([1, 3, 6])).toStrictEqual([1, 3, 6]);
-    expect(tryParseCell([1, 2, 3, 4, 5, 6, 7, 8])).toStrictEqual([
-      1, 2, 3, 4, 5, 6, 7, 8,
-    ]);
-
-    expect(tryParseCell([-1, 2, 3])).toBeNull();
-    expect(tryParseCell([1.2, 3])).toBeNull();
-    expect(tryParseCell([1, 1, 2])).toBeNull();
-    expect(tryParseCell([1, 2, 3, 9])).toBeNull();
-    expect(tryParseCell([0, 1, 2])).toBeNull();
-
-    const originalCell = [1, 2, 3];
-    const returnedCell = tryParseCell(originalCell);
-    expect(originalCell).toBe(returnedCell);
-  });
-
   describe("cellsToText", () => {
     test("empty", () => {
       expect(cellsToText([])).toStrictEqual([]);
@@ -233,6 +215,54 @@ describe("braille", () => {
         ["in", [3, 5]],
         ["a", [1]],
       ]);
+    });
+  });
+
+  describe("end-to-end", () => {
+    test.each<readonly [string, readonly Cell[]][]>([
+      [],
+      [["a", [[1]]]],
+      [
+        ["a", [[1]]],
+        ["b", [[1, 2]]],
+        ["c", [[1, 4]]],
+      ],
+      [
+        ["", [[3, 4, 5, 6]]],
+        ["3", [[1, 4]]],
+      ],
+      [
+        ["", [[3, 4, 5, 6]]],
+        ["3", [[1, 4]]],
+        ["", [[5, 6]]],
+        ["a", [[1]]],
+      ],
+      [["but", [[1, 2]]]],
+      [["en", [[2, 6]]]],
+      [
+        ["t", [[2, 3, 4, 5]]],
+        ["h", [[1, 2, 5]]],
+        ["en", [[2, 6]]],
+      ],
+    ])("basic %j", (...input: readonly [string, readonly Cell[]][]) => {
+      const [inputText, inputCells]: [string, readonly Cell[]] = input.reduce(
+        (prev, [text, cells]) => [prev[0] + text, prev[1].concat(cells)],
+        ["", []]
+      );
+
+      {
+        const outputCells: Cell[] = latinStringToCells(inputText);
+        expect(outputCells).toStrictEqual(inputCells);
+      }
+
+      {
+        // cellsToText doesn't currently support returning multiple cells per chunk of string.
+        const output = cellsToText(inputCells).map(([text, cell]) => [
+          text,
+          [cell],
+        ]);
+        expect(output).toStrictEqual(input);
+      }
     });
   });
 });

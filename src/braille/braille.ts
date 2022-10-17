@@ -6,7 +6,7 @@ import {
   ANYWHERE_LOWER_GROUP_SIGNS,
 } from "./braille-map";
 import * as BrailleModifiers from "./braille-modifiers";
-import { Cell, cellsEqual, isValidCell, Pip } from "./cell";
+import { Cell, cellsEqual, isValidCell, Pip, ValidCell } from "./cell";
 
 /** Converts a cell to the uincode codepoint representing the cell */
 export function _cellToUnicode(cell: Cell): string {
@@ -137,6 +137,15 @@ export function _latinStringToCells(string: string): Array<Cell> {
         continue;
       }
 
+      const manyAnywhereLowerGroupSign = tryLatinToGroupSign(
+        string.substring(i)
+      );
+      if (manyAnywhereLowerGroupSign !== null) {
+        ret.push(manyAnywhereLowerGroupSign[0]);
+        i += manyAnywhereLowerGroupSign[1];
+        continue;
+      }
+
       curState = null;
     }
 
@@ -154,6 +163,22 @@ function tryGroupSign(cell: Cell): string | null {
   return getKeyByValue(ANYWHERE_LOWER_GROUP_SIGNS, (groupSignCell) =>
     cellsEqual(cell, groupSignCell)
   );
+}
+
+/**
+ * Attempts to convert the beginning of the text to a group sign
+ * @param text The text to convert
+ * @returns If `text` starts with a groupsign, returns a pair of the representative cell and the
+ * length of the text consumed. Returns `null` if not a group sign.
+ */
+function tryLatinToGroupSign(text: string): [ValidCell, number] | null {
+  const maybeEntry = Object.entries(ANYWHERE_LOWER_GROUP_SIGNS).find(
+    ([groupSignText, _]) => text.startsWith(groupSignText)
+  );
+  if (maybeEntry == undefined) {
+    return null;
+  }
+  return [maybeEntry[1], maybeEntry[0].length];
 }
 
 /**
@@ -243,7 +268,7 @@ export function _cellsToText(braille: readonly Cell[]): Array<[string, Cell]> {
       ret.push([maybeGroupSign, inputCell]);
       continue;
     }
-    console.log("whoops");
+
     ret.push(["?", inputCell]);
   }
   return ret;

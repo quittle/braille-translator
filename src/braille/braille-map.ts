@@ -1,9 +1,11 @@
-import type { Cell } from ".";
+import type { ValidCell } from "./cell";
 
-export type LatinToCellMapping = Readonly<{ [latinCharacter: string]: Cell }>;
+export type LatinToCellMapping = Readonly<{
+  [latinCharacter: string]: ValidCell;
+}>;
 
 /** A mapping of latin characers to braille cells */
-export const BRAILLE_MAP: Readonly<{ [latinCharacter: string]: Cell }> = {
+export const BRAILLE_MAP: LatinToCellMapping = {
   a: [1],
   b: [1, 2],
   c: [1, 4],
