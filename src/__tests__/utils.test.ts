@@ -1,4 +1,4 @@
-import { getKeyByValue } from "../utils";
+import { getKeyByValue, filterNullish } from "../utils";
 
 describe("utils", () => {
   test("getKeyByValue with value", () => {
@@ -20,5 +20,19 @@ describe("utils", () => {
         (value) => value % 2 == 0
       )
     ).toBe("d");
+  });
+
+  test("filterNullish", () => {
+    expect(filterNullish([])).toStrictEqual([]);
+    expect(filterNullish([1, 2, "3", "", "null", false])).toStrictEqual([
+      1,
+      2,
+      "3",
+      "",
+      "null",
+      false,
+    ]);
+    expect(filterNullish([1, undefined, 2, null])).toStrictEqual([1, 2]);
+    expect(filterNullish([null, undefined, null, undefined])).toStrictEqual([]);
   });
 });

@@ -1,5 +1,7 @@
 import type { ValidCell } from "./cell";
 
+export const WORD_BOUNDARY_CHARS: readonly string[] = ["-", " "];
+
 export type LatinToCellMapping = Readonly<{
   [latinCharacter: string]: ValidCell;
 }>;

@@ -4,6 +4,7 @@ import {
   BRAILLE_WORD_SIGNS,
   NUMBER_LETTER_MAPPING,
   ANYWHERE_LOWER_GROUP_SIGNS,
+  WORD_BOUNDARY_CHARS,
 } from "./braille-map";
 import * as BrailleModifiers from "./braille-modifiers";
 import { Cell, cellsEqual, isValidCell, Pip, ValidCell } from "./cell";
@@ -41,13 +42,16 @@ export function getWordSign(
 ): null | { cell: Cell; length: number } {
   for (let i = 1; i < string.length; i++) {
     const char = string.charAt(i);
-    if (char === " ") {
+    if (WORD_BOUNDARY_CHARS.includes(char)) {
       return null;
     }
     const possibleWord = string.substring(0, i + 1);
     const possibleCell = BRAILLE_WORD_SIGNS[possibleWord];
     if (possibleCell !== undefined) {
-      if (i == string.length - 1 || string[i + 1] === " ") {
+      if (
+        i == string.length - 1 ||
+        WORD_BOUNDARY_CHARS.includes(string[i + 1])
+      ) {
         return {
           length: i + 1,
           cell: possibleCell,
@@ -105,7 +109,7 @@ export function _latinStringToCells(string: string): Array<Cell> {
           let offset = startingOffset;
           while (offset < string.length) {
             const curChar = string.charAt(offset);
-            if (curChar === " ") {
+            if (WORD_BOUNDARY_CHARS.includes(curChar)) {
               return offset;
             }
             if (!isUppercaseCharacter(curChar)) {
@@ -125,7 +129,7 @@ export function _latinStringToCells(string: string): Array<Cell> {
       }
       character = character.toLowerCase();
     } else {
-      if (character != " " && curState === "number") {
+      if (!WORD_BOUNDARY_CHARS.includes(character) && curState === "number") {
         ret.push(BrailleModifiers.LETTER_SIGN);
         curState = null;
       }
@@ -134,6 +138,7 @@ export function _latinStringToCells(string: string): Array<Cell> {
       if (wordSign !== null) {
         ret.push(wordSign.cell);
         i += wordSign.length;
+        i--; // Subtract to handle increment during loop
         continue;
       }
 
@@ -182,16 +187,8 @@ function tryLatinToGroupSign(text: string): [ValidCell, number] | null {
 }
 
 /**
- * Checks if a cell is a space
- * @param cell The cell to check.
- * @returns `true` if the cell is a space, otherwise returns `false`.
- */
-function isSpaceCell(cell: Cell): boolean {
-  return cellsEqual(BRAILLE_MAP[" "], cell);
-}
-
-/**
- * Determines if the cell at `offset` in `braille` can be considered a word
+ * Determines if the cell at `offset` in `braille` can be considered a word. This essentially checks
+ * for the "standing alone" rule.
  * @param braille The full braille text
  * @param offset The offset into the braille text
  * @returns `true` if at a boundary or the beginning or end of the word. Otherwise `false`.
@@ -200,13 +197,23 @@ function isCellAtWordBoundary(
   braille: ReadonlyArray<Cell>,
   offset: number
 ): boolean {
-  if (offset !== 0 && !isSpaceCell(braille[offset - 1])) {
+  const isWordBoundaryChar = (cell: Cell): boolean => {
+    return WORD_BOUNDARY_CHARS.some((char) =>
+      cellsEqual(BRAILLE_MAP[char], cell)
+    );
+  };
+
+  if (offset !== 0 && !isWordBoundaryChar(braille[offset - 1])) {
     return false;
   }
 
-  if (offset != braille.length - 1 && !isSpaceCell(braille[offset + 1])) {
+  if (
+    offset !== braille.length - 1 &&
+    !isWordBoundaryChar(braille[offset + 1])
+  ) {
     return false;
   }
+
   return true;
 }
 
@@ -227,7 +234,7 @@ export function _cellsToText(braille: readonly Cell[]): Array<[string, Cell]> {
     );
 
     if (char) {
-      if (char === " ") {
+      if (WORD_BOUNDARY_CHARS.includes(char)) {
         state = null;
       } else if (state === "number") {
         const number = getKeyByValue(NUMBER_LETTER_MAPPING, char);

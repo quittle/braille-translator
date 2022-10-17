@@ -245,29 +245,39 @@ describe("braille", () => {
         ["en", [[2, 6]]],
       ],
       [
-        ["a", [[1]]],
+        ["but", [Cell(1, 2)]],
         ["-", [[3, 6]]],
+        ["as", [[1, 3, 5, 6]]],
+      ],
+      [
+        ["a", [[1]]],
+        ["b", [[1, 2]]],
+        ["-", [[3, 6]]],
+        ["y", [[1, 3, 4, 5, 6]]],
         ["z", [[1, 3, 5, 6]]],
       ],
-    ])("basic %j", (...input: readonly [string, readonly Cell[]][]) => {
-      const [inputText, inputCells]: [string, readonly Cell[]] = input.reduce(
-        (prev, [text, cells]) => [prev[0] + text, prev[1].concat(cells)],
-        ["", []]
-      );
+    ])(
+      "forward-reverse: %j %j %j %j %j %j %j %j %j",
+      (...input: readonly [string, readonly Cell[]][]) => {
+        const [inputText, inputCells]: [string, readonly Cell[]] = input.reduce(
+          (prev, [text, cells]) => [prev[0] + text, prev[1].concat(cells)],
+          ["", []]
+        );
 
-      {
-        const outputCells: Cell[] = latinStringToCells(inputText);
-        expect(outputCells).toStrictEqual(inputCells);
-      }
+        {
+          const outputCells: Cell[] = latinStringToCells(inputText);
+          expect(outputCells).toStrictEqual(inputCells);
+        }
 
-      {
-        // cellsToText doesn't currently support returning multiple cells per chunk of string.
-        const output = cellsToText(inputCells).map(([text, cell]) => [
-          text,
-          [cell],
-        ]);
-        expect(output).toStrictEqual(input);
+        {
+          // cellsToText doesn't currently support returning multiple cells per chunk of string.
+          const output = cellsToText(inputCells).map(([text, cell]) => [
+            text,
+            [cell],
+          ]);
+          expect(output).toStrictEqual(input);
+        }
       }
-    });
+    );
   });
 });

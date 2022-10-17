@@ -1,4 +1,4 @@
-import { tryParseCell } from "../cell";
+import { Cell, tryParseCell } from "../cell";
 
 describe("cell", () => {
   test("tryParseCell", () => {
@@ -17,5 +17,13 @@ describe("cell", () => {
     const originalCell = [1, 2, 3];
     const returnedCell = tryParseCell(originalCell);
     expect(originalCell).toBe(returnedCell);
+  });
+
+  test("literal Cell", () => {
+    expect(Cell()).toStrictEqual([]);
+    expect(Cell(1, 2)).toStrictEqual([1, 2]);
+    expect(Cell(1, 2, 3)).toStrictEqual([1, 2, 3]);
+    expect(Cell(8, 3)).toStrictEqual([8, 3]);
+    expect(Cell(1, 1)).toBe("?");
   });
 });

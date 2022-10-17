@@ -24,3 +24,12 @@ export function getKeyByValue<T>(
 
   return foundEntry[0];
 }
+
+/**
+ * Removes all null-ish values, `null` or `undefined`, from the array, returning a new array.
+ * @param arr The array to filter
+ * @returns The contents of `arr`, in the same order, minus all the nullish values.
+ */
+export function filterNullish<T>(arr: readonly (T | undefined | null)[]): T[] {
+  return arr.filter((entry) => entry != null) as T[];
+}

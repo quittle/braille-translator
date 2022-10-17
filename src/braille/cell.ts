@@ -1,3 +1,5 @@
+import { filterNullish } from "../utils";
+
 /** Represents a pip value, using the standard braille dot number system. */
 export type Pip = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export type InvalidCell = "?";
@@ -14,6 +16,23 @@ export type ValidCell =
   | Readonly<[Pip, Pip, Pip, Pip, Pip, Pip, Pip, Pip]>;
 /** Represents a single character as either invalid or valid pips */
 export type Cell = InvalidCell | ValidCell;
+
+/**
+ * Creates a cell, enforcing length and values nicer than an array literal
+ * @returns The cell. If invalid, returns an InvalidCell`
+ */
+export function Cell(
+  p1?: Pip,
+  p2?: Pip,
+  p3?: Pip,
+  p4?: Pip,
+  p5?: Pip,
+  p6?: Pip,
+  p7?: Pip,
+  p8?: Pip
+): Cell {
+  return tryParseCell(filterNullish([p1, p2, p3, p4, p5, p6, p7, p8])) ?? "?";
+}
 
 /**
  * Determines if two cells are equal. Note, this assumes the cell pips are both sorted.
