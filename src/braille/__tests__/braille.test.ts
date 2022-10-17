@@ -244,6 +244,11 @@ describe("braille", () => {
         ["h", [[1, 2, 5]]],
         ["en", [[2, 6]]],
       ],
+      [
+        ["a", [[1]]],
+        ["-", [[3, 6]]],
+        ["z", [[1, 3, 5, 6]]],
+      ],
     ])("basic %j", (...input: readonly [string, readonly Cell[]][]) => {
       const [inputText, inputCells]: [string, readonly Cell[]] = input.reduce(
         (prev, [text, cells]) => [prev[0] + text, prev[1].concat(cells)],

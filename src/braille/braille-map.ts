@@ -33,6 +33,7 @@ export const BRAILLE_MAP: LatinToCellMapping = {
   y: [1, 3, 4, 5, 6],
   z: [1, 3, 5, 6],
   " ": [],
+  "-": [3, 6],
 };
 
 /** A mapping of words to single-letter signs */
