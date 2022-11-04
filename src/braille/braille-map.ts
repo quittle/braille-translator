@@ -1,7 +1,5 @@
 import type { ValidCell } from "./cell";
 
-export const WORD_BOUNDARY_CHARS: readonly string[] = ["-", " "];
-
 export type LatinToCellMapping = Readonly<{
   [latinCharacter: string]: ValidCell;
 }>;
@@ -95,3 +93,8 @@ export const ANYWHERE_LOWER_GROUP_SIGNS: LatinToCellMapping = {
   en: [2, 6],
   in: [3, 5],
 };
+
+export const WORD_BOUNDARY_CHARS: readonly string[] = ["-", " "];
+
+export const WORD_BOUNDARY_CELLS: readonly ValidCell[] =
+  WORD_BOUNDARY_CHARS.map((char) => BRAILLE_MAP[char]);

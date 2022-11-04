@@ -21,6 +21,29 @@ describe("state", () => {
         ["", [[5, 6]]],
         ["a", [[1]]],
       ],
+      [
+        ["", [[3, 4, 5, 6]]],
+        ["3", [[1, 4]]],
+        [" ", [[]]],
+        ["a", [[1]]],
+      ],
+      [["but", [[1, 2]]]],
+      [
+        ["b", [[1, 2]]],
+        ["a", [[1]]],
+      ],
+      [
+        ["but", [Cell(1, 2)]],
+        ["-", [[3, 6]]],
+        ["as", [[1, 3, 5, 6]]],
+      ],
+      [
+        ["a", [[1]]],
+        ["b", [[1, 2]]],
+        ["-", [[3, 6]]],
+        ["y", [[1, 3, 4, 5, 6]]],
+        ["z", [[1, 3, 5, 6]]],
+      ],
     ])(
       "forward-reverse: %j %j %j %j %j %j %j %j %j",
       (...input: readonly [string, readonly Cell[]][]) => {
@@ -36,16 +59,22 @@ describe("state", () => {
           const result = textToBraille(inputText);
           expect(result).not.toBeNull();
 
-          const output = result?.map(({ str, cells }) => [str, cells]);
-          expect(output).toStrictEqual(input);
+          const textToBrailleOutput = result?.map(({ str, cells }) => [
+            str,
+            cells,
+          ]);
+          expect(textToBrailleOutput).toStrictEqual(input);
         }
 
         {
           const result = brailleToText(inputCells);
           expect(result).not.toBeNull();
 
-          const output = result?.map(({ str, cells }) => [str, cells]);
-          expect(output).toStrictEqual(input);
+          const brailleToTextOutput = result?.map(({ str, cells }) => [
+            str,
+            cells,
+          ]);
+          expect(brailleToTextOutput).toStrictEqual(input);
         }
       }
     );

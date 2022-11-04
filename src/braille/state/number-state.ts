@@ -7,7 +7,7 @@ import { NextStates, State, StateHandler } from "./state-machine";
 import { MatchResult, MatchEntries } from "./types";
 
 /**
- *
+ * Matches numbers
  */
 export class NumberState implements StateHandler {
   nextStates = (): NextStates => [LetterState, NumberState];
