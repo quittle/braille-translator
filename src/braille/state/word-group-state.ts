@@ -51,9 +51,9 @@ export class WordGroupState implements StateHandler {
 
   textToBraille = (state: State, str: string, index: number): MatchResult => {
     switch (state) {
-      case "number":
+      case State.Number:
         return null;
-      case "default": {
+      case State.Default: {
         if (!isStringIndexEligibleForWordBoundary(str, index)) {
           return null;
         }
@@ -70,7 +70,7 @@ export class WordGroupState implements StateHandler {
           }
           return {
             entries: [{ str: word, cells: [cell] }],
-            state: "default",
+            state: State.Default,
           };
         }
         return null;
@@ -85,9 +85,9 @@ export class WordGroupState implements StateHandler {
   ): MatchResult => {
     const cell = cells[index];
     switch (state) {
-      case "number":
+      case State.Number:
         return null;
-      case "default": {
+      case State.Default: {
         if (!isCellIndexEligibleForWordBoundary(cells, index)) {
           return null;
         }
@@ -96,7 +96,7 @@ export class WordGroupState implements StateHandler {
           if (cellsEqual(cell, wordCell)) {
             return {
               entries: [{ str: word, cells: [cell] }],
-              state: "default",
+              state: State.Default,
             };
           }
         }

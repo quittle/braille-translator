@@ -20,7 +20,10 @@ export class AnywhereGroupState implements StateHandler {
   textToBraille = (_state: State, str: string, index: number): MatchResult => {
     for (const [sign, cell] of Object.entries(ANYWHERE_LOWER_GROUP_SIGNS)) {
       if (str.substring(index, index + sign.length) === sign) {
-        return { entries: [{ str: sign, cells: [cell] }], state: "default" };
+        return {
+          entries: [{ str: sign, cells: [cell] }],
+          state: State.Default,
+        };
       }
     }
     return null;
@@ -33,7 +36,10 @@ export class AnywhereGroupState implements StateHandler {
   ): MatchResult => {
     for (const [sign, cell] of Object.entries(ANYWHERE_LOWER_GROUP_SIGNS)) {
       if (cellsEqual(cells[index], cell)) {
-        return { entries: [{ str: sign, cells: [cell] }], state: "default" };
+        return {
+          entries: [{ str: sign, cells: [cell] }],
+          state: State.Default,
+        };
       }
     }
     return null;

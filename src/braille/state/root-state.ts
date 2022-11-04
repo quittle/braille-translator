@@ -23,7 +23,7 @@ export class RootState implements StateHandler {
     _index: number
   ): MatchResult => {
     // Empty match to kick things off
-    return { entries: [], state: "default" };
+    return { entries: [], state: State.Default };
   };
 
   brailleToText = (
@@ -32,6 +32,6 @@ export class RootState implements StateHandler {
     _index: number
   ): MatchResult => {
     // Empty match to kick things off
-    return { entries: [], state: "default" };
+    return { entries: [], state: State.Default };
   };
 }

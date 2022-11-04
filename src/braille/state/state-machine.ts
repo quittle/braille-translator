@@ -2,7 +2,10 @@ import { Cell } from "../cell";
 import { MatchResult, MatchEntry } from "./types";
 
 /** The current "state" during translation. This is important for tracking what may be valid next characters. */
-export type State = "number" | "default";
+export enum State {
+  Default,
+  Number,
+}
 
 /** Produces a potential next state. */
 export type NextState = new () => StateHandler;

@@ -3,6 +3,7 @@ import { RootState } from "./root-state";
 import {
   runBrailleToTextStateMachine,
   runTextToBrailleStateMachine,
+  State,
 } from "./state-machine";
 import { MatchEntries } from "./types";
 export type { MatchEntries, MatchEntry } from "./types";
@@ -16,7 +17,7 @@ export function textToBraille(str: string): MatchEntries | null {
   const result = runTextToBrailleStateMachine(
     str,
     0,
-    "default",
+    State.Default,
     new RootState()
   );
   if (result === null) {
@@ -34,7 +35,7 @@ export function brailleToText(cells: readonly Cell[]): MatchEntries | null {
   const result = runBrailleToTextStateMachine(
     cells,
     0,
-    "default",
+    State.Default,
     new RootState()
   );
   if (result === null) {

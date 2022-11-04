@@ -26,11 +26,11 @@ export class LetterState implements StateHandler {
       return null;
     }
     const ret: MatchEntries = [];
-    if (state === "number" && !WORD_BOUNDARY_CHARS.includes(char)) {
+    if (state === State.Number && !WORD_BOUNDARY_CHARS.includes(char)) {
       ret.push({ str: "", cells: [LETTER_SIGN] });
     }
     ret.push({ str: char, cells: [match] });
-    return { entries: ret, state: "default" };
+    return { entries: ret, state: State.Default };
   };
 
   brailleToText = (
@@ -40,9 +40,12 @@ export class LetterState implements StateHandler {
   ): MatchResult => {
     const cell = cells[index];
     switch (state) {
-      case "number": {
+      case State.Number: {
         if (cellsEqual(cell, LETTER_SIGN)) {
-          return { entries: [{ str: "", cells: [cell] }], state: "default" };
+          return {
+            entries: [{ str: "", cells: [cell] }],
+            state: State.Default,
+          };
         }
         const letter = getKeyByValue(BRAILLE_MAP, (entryCell) =>
           cellsEqual(entryCell, cell)
@@ -53,19 +56,19 @@ export class LetterState implements StateHandler {
         if (WORD_BOUNDARY_CHARS.includes(letter)) {
           return {
             entries: [{ str: letter, cells: [cell] }],
-            state: "default",
+            state: State.Default,
           };
         }
         return null;
       }
-      case "default": {
+      case State.Default: {
         const letter = getKeyByValue(BRAILLE_MAP, (entryCell) =>
           cellsEqual(cell, entryCell)
         );
         if (letter !== null) {
           return {
             entries: [{ str: letter, cells: [cell] }],
-            state: "default",
+            state: State.Default,
           };
         } else {
           return null;

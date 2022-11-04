@@ -17,7 +17,7 @@ export class NumberState implements StateHandler {
     const char = str.charAt(index);
     const ret: MatchEntries = [];
     switch (state) {
-      case "default":
+      case State.Default:
         ret.push({ str: "", cells: [NUMBER] });
     }
     const letter = NUMBER_LETTER_MAPPING[char];
@@ -25,7 +25,7 @@ export class NumberState implements StateHandler {
       return null;
     }
     ret.push({ str: char, cells: [BRAILLE_MAP[letter]] });
-    return { entries: ret, state: "number" };
+    return { entries: ret, state: State.Number };
   };
 
   brailleToText = (
@@ -35,7 +35,7 @@ export class NumberState implements StateHandler {
   ): MatchResult => {
     const cell = cells[index];
     switch (state) {
-      case "number": {
+      case State.Number: {
         const letter = getKeyByValue(BRAILLE_MAP, (entryCell) =>
           cellsEqual(cell, entryCell)
         );
@@ -50,12 +50,12 @@ export class NumberState implements StateHandler {
 
         return {
           entries: [{ str: number, cells: [cell] }],
-          state: "number",
+          state: State.Number,
         };
       }
-      case "default": {
+      case State.Default: {
         if (cellsEqual(cell, NUMBER)) {
-          return { entries: [{ str: "", cells: [cell] }], state: "number" };
+          return { entries: [{ str: "", cells: [cell] }], state: State.Number };
         } else {
           return null;
         }
