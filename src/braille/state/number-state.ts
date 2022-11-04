@@ -2,6 +2,7 @@ import { getKeyByValue } from "../../utils";
 import { NUMBER_LETTER_MAPPING, BRAILLE_MAP } from "../braille-map";
 import { NUMBER } from "../braille-modifiers";
 import { Cell, cellsEqual } from "../cell";
+import { AnywhereGroupState } from "./anywhere-group-state";
 import { LetterState } from "./letter-state";
 import { NextStates, State, StateHandler } from "./state-machine";
 import { MatchResult, MatchEntries } from "./types";
@@ -10,7 +11,7 @@ import { MatchResult, MatchEntries } from "./types";
  * Matches numbers
  */
 export class NumberState implements StateHandler {
-  nextStates = (): NextStates => [LetterState, NumberState];
+  nextStates = (): NextStates => [AnywhereGroupState, LetterState, NumberState];
 
   textToBraille = (state: State, str: string, index: number): MatchResult => {
     const char = str.charAt(index);

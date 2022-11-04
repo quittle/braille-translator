@@ -2,6 +2,7 @@ import { getKeyByValue } from "../../utils";
 import { BRAILLE_MAP, WORD_BOUNDARY_CHARS } from "../braille-map";
 import { LETTER_SIGN } from "../braille-modifiers";
 import { Cell, cellsEqual } from "../cell";
+import { AnywhereGroupState } from "./anywhere-group-state";
 import { NumberState } from "./number-state";
 import { NextStates, State, StateHandler } from "./state-machine";
 import { MatchResult, MatchEntries } from "./types";
@@ -11,7 +12,12 @@ import { WordGroupState } from "./word-group-state";
  * Matches letters
  */
 export class LetterState implements StateHandler {
-  nextStates = (): NextStates => [WordGroupState, LetterState, NumberState];
+  nextStates = (): NextStates => [
+    AnywhereGroupState,
+    WordGroupState,
+    LetterState,
+    NumberState,
+  ];
 
   textToBraille = (state: State, str: string, index: number): MatchResult => {
     const char = str.charAt(index);
