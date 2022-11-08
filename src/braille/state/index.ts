@@ -1,9 +1,9 @@
 import { Cell } from "../cell";
 import { RootState } from "./root-state";
+import { State } from "./state-handler";
 import {
   runBrailleToTextStateMachine,
   runTextToBrailleStateMachine,
-  State,
 } from "./state-machine";
 import { MatchEntries } from "./types";
 export type { MatchEntries, MatchEntry } from "./types";

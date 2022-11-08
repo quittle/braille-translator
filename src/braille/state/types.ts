@@ -1,5 +1,5 @@
 import { Cell } from "../cell";
-import { State } from "./state-machine";
+import { State } from "./state-handler";
 
 /** A single, matched entry */
 export type MatchEntry = {

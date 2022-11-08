@@ -1,24 +1,11 @@
 import { Cell } from "../cell";
-import { AnywhereGroupState } from "./anywhere-group-state";
-import { LetterState } from "./letter-state";
-import { NumberState } from "./number-state";
-import { NextStates, State, StateHandler } from "./state-machine";
+import { State, StateHandler } from "./state-handler";
 import { MatchResult } from "./types";
-import { UppercaseState } from "./uppercase-state";
-import { WordGroupState } from "./word-group-state";
 
 /**
  * Default/Root state. Use this as the entry point for translation.
  */
 export class RootState implements StateHandler {
-  nextStates = (): NextStates => [
-    UppercaseState,
-    AnywhereGroupState,
-    WordGroupState,
-    LetterState,
-    NumberState,
-  ];
-
   textToBraille = (
     _state: State,
     _str: string,

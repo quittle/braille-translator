@@ -6,8 +6,7 @@ import {
 } from "../braille-map";
 import { UPPER_CASE_LETTER } from "../braille-modifiers";
 import { Cell, cellsEqual } from "../cell";
-import { LetterState } from "./letter-state";
-import { NextStates, State, StateHandler } from "./state-machine";
+import { State, StateHandler } from "./state-handler";
 import { MatchResult } from "./types";
 
 /**
@@ -63,8 +62,6 @@ function isCellIndexEligibleForWordBoundary(
  * Matches words
  */
 export class WordGroupState implements StateHandler {
-  nextStates = (): NextStates => [LetterState];
-
   textToBraille = (state: State, str: string, index: number): MatchResult => {
     switch (state) {
       case State.Number:

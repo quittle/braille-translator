@@ -1,23 +1,13 @@
 import { uppercaseFirstLetter } from "../../utils";
 import { ANYWHERE_LOWER_GROUP_SIGNS } from "../braille-map";
 import { Cell, cellsEqual } from "../cell";
-import { LetterState } from "./letter-state";
-import { NumberState } from "./number-state";
-import { NextStates, State, StateHandler } from "./state-machine";
+import { State, StateHandler } from "./state-handler";
 import { MatchResult } from "./types";
-import { WordGroupState } from "./word-group-state";
 
 /**
  * Matches letters
  */
 export class AnywhereGroupState implements StateHandler {
-  nextStates = (): NextStates => [
-    AnywhereGroupState,
-    WordGroupState,
-    LetterState,
-    NumberState,
-  ];
-
   textToBraille = (state: State, str: string, index: number): MatchResult => {
     for (const [sign, cell] of Object.entries(ANYWHERE_LOWER_GROUP_SIGNS)) {
       let actualSign: string;

@@ -1,55 +1,19 @@
 import { Cell } from "../cell";
+import { AnywhereGroupState } from "./anywhere-group-state";
+import { LetterState } from "./letter-state";
+import { NumberState } from "./number-state";
+import { State, StateHandler } from "./state-handler";
 import { MatchResult, MatchEntry } from "./types";
+import { UppercaseState } from "./uppercase-state";
+import { WordGroupState } from "./word-group-state";
 
-/** The current "state" during translation. This is important for tracking what may be valid next characters. */
-export enum State {
-  Default,
-  Number,
-  UppercaseLetter,
-  UppercaseWord,
-}
-
-/** Produces a potential next state. */
-export type NextState = new () => StateHandler;
-
-/** The list of potential next states */
-export type NextStates = readonly NextState[];
-
-/**
- * Attempts to handle translations for a small subset of rules, like just letters, word-groups, numbers, etc.
- */
-export interface StateHandler {
-  /**
-   * If matched successfully, what potential next states are valid.
-   *
-   * @returns The next valid states.
-   */
-  nextStates: () => NextStates;
-
-  /**
-   * Attempts to convert the text to braille.
-   *
-   * @param state The current state
-   * @param str The full text to convert
-   * @param index The index of `str` being converted
-   * @returns The result of translation.
-   */
-  textToBraille: (state: State, str: string, index: number) => MatchResult;
-
-  /**
-   * Attempts to convert braille cells to text.
-   *
-   * @param state The current state
-   * @param cells The full set of cells to convert
-   * @param index The index of `cells` being converted
-   * @returns The result of translation.
-   */
-  brailleToText: (
-    state: State,
-    cells: readonly Cell[],
-    index: number
-  ) => MatchResult;
-}
+const ORDERED_STATES: readonly StateHandler[] = [
+  new UppercaseState(),
+  new AnywhereGroupState(),
+  new WordGroupState(),
+  new LetterState(),
+  new NumberState(),
+];
 
 /**
  * Recursively invokes translation of braille cells to text.
@@ -74,13 +38,12 @@ export function runBrailleToTextStateMachine(
     return result;
   }
 
-  const nextStates = handler.nextStates();
-  for (let i = 0; i < nextStates.length; i++) {
+  for (let i = 0; i < ORDERED_STATES.length; i++) {
     const nextResult = runBrailleToTextStateMachine(
       cells,
       index + resultLen,
       result.state,
-      new nextStates[i]()
+      ORDERED_STATES[i]
     );
     if (nextResult === null) {
       continue;
@@ -117,13 +80,12 @@ export function runTextToBrailleStateMachine(
     return result;
   }
 
-  const nextStates = handler.nextStates();
-  for (let i = 0; i < nextStates.length; i++) {
+  for (let i = 0; i < ORDERED_STATES.length; i++) {
     const nextResult = runTextToBrailleStateMachine(
       str,
       index + resultLen,
       result.state,
-      new nextStates[i]()
+      ORDERED_STATES[i]
     );
     if (nextResult === null) {
       continue;

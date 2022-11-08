@@ -1,22 +1,13 @@
 import { isUppercase } from "../../utils";
 import { UPPER_CASE_LETTER, UPPER_CASE_WORD } from "../braille-modifiers";
 import { Cell, cellsEqual } from "../cell";
-import { AnywhereGroupState } from "./anywhere-group-state";
-import { LetterState } from "./letter-state";
-import { NextStates, State, StateHandler } from "./state-machine";
+import { State, StateHandler } from "./state-handler";
 import { MatchResult } from "./types";
-import { WordGroupState } from "./word-group-state";
 
 /**
  * Matches uppercase converters
  */
 export class UppercaseState implements StateHandler {
-  nextStates = (): NextStates => [
-    AnywhereGroupState,
-    WordGroupState,
-    LetterState,
-  ];
-
   textToBraille = (state: State, str: string, index: number): MatchResult => {
     switch (state) {
       case State.UppercaseLetter:
