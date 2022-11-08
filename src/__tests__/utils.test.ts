@@ -1,4 +1,9 @@
-import { getKeyByValue, filterNullish } from "../utils";
+import {
+  getKeyByValue,
+  filterNullish,
+  uppercaseFirstLetter,
+  isUppercase,
+} from "../utils";
 
 describe("utils", () => {
   test("getKeyByValue with value", () => {
@@ -34,5 +39,23 @@ describe("utils", () => {
     ]);
     expect(filterNullish([1, undefined, 2, null])).toStrictEqual([1, 2]);
     expect(filterNullish([null, undefined, null, undefined])).toStrictEqual([]);
+  });
+
+  test("uppercaseFirstLetter", () => {
+    expect(uppercaseFirstLetter("abc")).toBe("Abc");
+    expect(uppercaseFirstLetter("a")).toBe("A");
+    expect(uppercaseFirstLetter("")).toBe("");
+    expect(uppercaseFirstLetter("A")).toBe("A");
+  });
+
+  test("isUppercase", () => {
+    expect(isUppercase("")).toBe(false);
+    expect(isUppercase(" ")).toBe(false);
+    expect(isUppercase("a")).toBe(false);
+    expect(isUppercase("aA")).toBe(false);
+
+    expect(isUppercase("A")).toBe(true);
+    expect(isUppercase(" A ")).toBe(true);
+    expect(isUppercase("AB")).toBe(true);
   });
 });

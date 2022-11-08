@@ -5,6 +5,8 @@ import { MatchResult, MatchEntry } from "./types";
 export enum State {
   Default,
   Number,
+  UppercaseLetter,
+  UppercaseWord,
 }
 
 /** Produces a potential next state. */

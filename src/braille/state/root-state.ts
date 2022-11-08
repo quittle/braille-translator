@@ -4,6 +4,7 @@ import { LetterState } from "./letter-state";
 import { NumberState } from "./number-state";
 import { NextStates, State, StateHandler } from "./state-machine";
 import { MatchResult } from "./types";
+import { UppercaseState } from "./uppercase-state";
 import { WordGroupState } from "./word-group-state";
 
 /**
@@ -11,6 +12,7 @@ import { WordGroupState } from "./word-group-state";
  */
 export class RootState implements StateHandler {
   nextStates = (): NextStates => [
+    UppercaseState,
     AnywhereGroupState,
     WordGroupState,
     LetterState,

@@ -6,19 +6,30 @@ import { AnywhereGroupState } from "./anywhere-group-state";
 import { LetterState } from "./letter-state";
 import { NextStates, State, StateHandler } from "./state-machine";
 import { MatchResult, MatchEntries } from "./types";
+import { UppercaseState } from "./uppercase-state";
 
 /**
  * Matches numbers
  */
 export class NumberState implements StateHandler {
-  nextStates = (): NextStates => [AnywhereGroupState, LetterState, NumberState];
+  nextStates = (): NextStates => [
+    UppercaseState,
+    AnywhereGroupState,
+    LetterState,
+    NumberState,
+  ];
 
   textToBraille = (state: State, str: string, index: number): MatchResult => {
     const char = str.charAt(index);
     const ret: MatchEntries = [];
     switch (state) {
       case State.Default:
+      case State.UppercaseLetter:
+      case State.UppercaseWord:
         ret.push({ str: "", cells: [NUMBER] });
+        break;
+      case State.Number:
+        break;
     }
     const letter = NUMBER_LETTER_MAPPING[char];
     if (letter == null) {
@@ -53,6 +64,8 @@ export class NumberState implements StateHandler {
           state: State.Number,
         };
       }
+      case State.UppercaseLetter:
+      case State.UppercaseWord:
       case State.Default: {
         if (cellsEqual(cell, NUMBER)) {
           return { entries: [{ str: "", cells: [cell] }], state: State.Number };

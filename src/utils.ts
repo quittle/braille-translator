@@ -33,3 +33,22 @@ export function getKeyByValue<T>(
 export function filterNullish<T>(arr: readonly (T | undefined | null)[]): T[] {
   return arr.filter((entry) => entry != null) as T[];
 }
+
+/**
+ * Uppercases the first letter of a string
+ * @param str The string to convert the case of
+ * @returns The converted string.
+ */
+export function uppercaseFirstLetter(str: string): string {
+  if (str.length === 0) {
+    return "";
+  }
+  return str[0].toUpperCase() + str.substring(1);
+}
+
+/**
+ * Checks if a string is uppercase. If the string doesn't have a meaningful case, such as " ", returns false.
+ */
+export function isUppercase(str: string): boolean {
+  return str.toUpperCase() === str && str.toLowerCase() !== str;
+}

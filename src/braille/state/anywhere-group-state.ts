@@ -1,3 +1,4 @@
+import { uppercaseFirstLetter } from "../../utils";
 import { ANYWHERE_LOWER_GROUP_SIGNS } from "../braille-map";
 import { Cell, cellsEqual } from "../cell";
 import { LetterState } from "./letter-state";
@@ -17,11 +18,24 @@ export class AnywhereGroupState implements StateHandler {
     NumberState,
   ];
 
-  textToBraille = (_state: State, str: string, index: number): MatchResult => {
+  textToBraille = (state: State, str: string, index: number): MatchResult => {
     for (const [sign, cell] of Object.entries(ANYWHERE_LOWER_GROUP_SIGNS)) {
-      if (str.substring(index, index + sign.length) === sign) {
+      let actualSign: string;
+      switch (state) {
+        case State.Default:
+        case State.Number:
+          actualSign = sign;
+          break;
+        case State.UppercaseLetter:
+          actualSign = uppercaseFirstLetter(sign);
+          break;
+        case State.UppercaseWord:
+          actualSign = sign.toUpperCase();
+          break;
+      }
+      if (str.substring(index, index + sign.length) === actualSign) {
         return {
-          entries: [{ str: sign, cells: [cell] }],
+          entries: [{ str: actualSign, cells: [cell] }],
           state: State.Default,
         };
       }

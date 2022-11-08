@@ -9,7 +9,7 @@
     "google",
     "prettier"
   ],
-  "ignorePatterns": ["**/*.scss", "**/*.png", "dist/**"],
+  "ignorePatterns": ["**/*.scss", "**/*.png", "**/*.svg", "dist/**"],
 
   "overrides": [
     {
@@ -37,7 +37,8 @@
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "tsconfig.json"
   },
   "plugins": ["react", "@typescript-eslint"],
   "rules": {
@@ -49,6 +50,7 @@
       "error",
       { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
     ],
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
     "new-cap": ["error", { "capIsNewExceptions": ["Cell"] }]
   },
   "settings": {
