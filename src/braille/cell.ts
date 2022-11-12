@@ -3,6 +3,7 @@ import { filterNullish } from "../utils";
 /** Represents a pip value, using the standard braille dot number system. */
 export type Pip = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
 export type InvalidCell = "?";
+export const INVALID_CELL: InvalidCell = "?";
 /** All possible valid pips in a c  */
 export type ValidCell =
   | Readonly<[]>
@@ -31,7 +32,10 @@ export function Cell(
   p7?: Pip,
   p8?: Pip
 ): Cell {
-  return tryParseCell(filterNullish([p1, p2, p3, p4, p5, p6, p7, p8])) ?? "?";
+  return (
+    tryParseCell(filterNullish([p1, p2, p3, p4, p5, p6, p7, p8])) ??
+    INVALID_CELL
+  );
 }
 
 /**
@@ -83,5 +87,5 @@ export function tryParseCell(pips: ReadonlyArray<number>): Cell | null {
 
 /** Determines if a cell is valid or not */
 export function isValidCell(cell: Cell): cell is ValidCell {
-  return cell !== "?";
+  return cell !== INVALID_CELL;
 }

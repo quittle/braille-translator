@@ -1,7 +1,8 @@
-import { Cell } from "../cell";
+import { Cell, INVALID_CELL } from "../cell";
 import { AnywhereGroupState } from "./anywhere-group-state";
 import { LetterState } from "./letter-state";
 import { NumberState } from "./number-state";
+import { RootState } from "./root-state";
 import { State, StateHandler } from "./state-handler";
 import { MatchResult, MatchEntry } from "./types";
 import { UppercaseState } from "./uppercase-state";
@@ -54,7 +55,34 @@ export function runBrailleToTextStateMachine(
     };
   }
 
-  return null;
+  const nextCell = cells[index + resultLen];
+
+  if (index + resultLen + 1 === cells.length) {
+    return {
+      entries: result.entries.concat([{ str: "?", cells: [nextCell] }]),
+      state: result.state,
+    };
+  }
+  const fallbackResult = runBrailleToTextStateMachine(
+    cells,
+    index + resultLen + 1,
+    result.state,
+    new RootState()
+  );
+  if (fallbackResult == null) {
+    return {
+      entries: result.entries.concat([{ str: "?", cells: [nextCell] }]),
+      state: result.state,
+    };
+  }
+
+  return {
+    entries: result.entries.concat(
+      [{ str: "?", cells: [nextCell] }],
+      fallbackResult.entries
+    ),
+    state: fallbackResult.state,
+  };
 }
 
 /**
@@ -96,5 +124,35 @@ export function runTextToBrailleStateMachine(
     };
   }
 
-  return null;
+  const nextChar = str[index + resultLen];
+  if (index + resultLen + 1 === str.length) {
+    return {
+      entries: result.entries.concat([
+        { str: nextChar, cells: [INVALID_CELL] },
+      ]),
+      state: result.state,
+    };
+  }
+  const fallbackResult = runTextToBrailleStateMachine(
+    str,
+    index + resultLen + 1,
+    result.state,
+    new RootState()
+  );
+  if (fallbackResult == null) {
+    return {
+      entries: result.entries.concat([
+        { str: nextChar, cells: [INVALID_CELL] },
+      ]),
+      state: result.state,
+    };
+  }
+
+  return {
+    entries: result.entries.concat(
+      [{ str: nextChar, cells: [INVALID_CELL] }],
+      fallbackResult.entries
+    ),
+    state: fallbackResult.state,
+  };
 }

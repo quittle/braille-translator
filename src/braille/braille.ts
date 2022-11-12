@@ -7,7 +7,14 @@ import {
   WORD_BOUNDARY_CHARS,
 } from "./braille-map";
 import * as BrailleModifiers from "./braille-modifiers";
-import { Cell, cellsEqual, isValidCell, Pip, ValidCell } from "./cell";
+import {
+  Cell,
+  cellsEqual,
+  INVALID_CELL,
+  isValidCell,
+  Pip,
+  ValidCell,
+} from "./cell";
 
 /** Converts a cell to the uincode codepoint representing the cell */
 export function _cellToUnicode(cell: Cell): string {
@@ -154,7 +161,7 @@ export function _latinStringToCells(string: string): Array<Cell> {
       curState = null;
     }
 
-    ret.push(BRAILLE_MAP[character] || "?");
+    ret.push(BRAILLE_MAP[character] || INVALID_CELL);
   }
   return ret;
 }

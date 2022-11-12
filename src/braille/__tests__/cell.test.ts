@@ -1,4 +1,4 @@
-import { Cell, tryParseCell } from "../cell";
+import { Cell, INVALID_CELL, tryParseCell } from "../cell";
 
 describe("cell", () => {
   test("tryParseCell", () => {
@@ -24,6 +24,6 @@ describe("cell", () => {
     expect(Cell(1, 2)).toStrictEqual([1, 2]);
     expect(Cell(1, 2, 3)).toStrictEqual([1, 2, 3]);
     expect(Cell(8, 3)).toStrictEqual([8, 3]);
-    expect(Cell(1, 1)).toBe("?");
+    expect(Cell(1, 1)).toBe(INVALID_CELL);
   });
 });

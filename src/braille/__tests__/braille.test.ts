@@ -10,6 +10,7 @@ import {
   getWordSign,
   isUppercaseCharacter,
 } from "../braille";
+import { INVALID_CELL } from "../cell";
 
 const BRAILLE_SPACE = "⠀";
 
@@ -18,6 +19,7 @@ describe("braille", () => {
     expect(isValidCell([])).toBe(true);
     expect(isValidCell([1, 2, 3])).toBe(true);
     expect(isValidCell("?")).toBe(false);
+    expect(isValidCell(INVALID_CELL)).toBe(false);
   });
 
   test("cellToUnicode", () => {
