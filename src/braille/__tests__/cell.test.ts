@@ -1,6 +1,13 @@
-import { Cell, INVALID_CELL, tryParseCell } from "../cell";
+import { Cell, INVALID_CELL, isValidCell, tryParseCell } from "../cell";
 
 describe("cell", () => {
+  test("isValidCell", () => {
+    expect(isValidCell([])).toBe(true);
+    expect(isValidCell([1, 2, 3])).toBe(true);
+    expect(isValidCell("?")).toBe(false);
+    expect(isValidCell(INVALID_CELL)).toBe(false);
+  });
+
   test("tryParseCell", () => {
     expect(tryParseCell([])).toStrictEqual([]);
     expect(tryParseCell([1, 3, 6])).toStrictEqual([1, 3, 6]);
