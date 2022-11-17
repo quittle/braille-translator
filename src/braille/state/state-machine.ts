@@ -1,5 +1,6 @@
 import { Cell, INVALID_CELL } from "../cell";
 import { AnywhereGroupState } from "./anywhere-group-state";
+import { debugLog } from "./debug";
 import { LetterState } from "./letter-state";
 import { NumberState } from "./number-state";
 import { RootState } from "./root-state";
@@ -29,6 +30,16 @@ export function runBrailleToTextStateMachine(
   if (result === null) {
     return null;
   }
+
+  debugLog(
+    "runBrailleToTextStateMachine matched",
+    handler.constructor.name,
+    "(",
+    cells,
+    ")[",
+    index,
+    "]"
+  );
 
   const resultLen: number = result.entries.reduce(
     (count, entry: MatchEntry) => count + entry.cells.length,

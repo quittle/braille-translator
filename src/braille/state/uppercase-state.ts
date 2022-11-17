@@ -1,5 +1,9 @@
 import { isUppercase } from "../../utils";
-import { UPPER_CASE_LETTER, UPPER_CASE_WORD } from "../braille-modifiers";
+import {
+  CAPITALS_TERMINATOR,
+  UPPER_CASE_LETTER,
+  UPPER_CASE_WORD,
+} from "../braille-modifiers";
 import { Cell, cellsEqual } from "../cell";
 import { State, StateHandler } from "./state-handler";
 import { MatchResult } from "./types";
@@ -43,25 +47,40 @@ export class UppercaseState implements StateHandler {
     cells: readonly Cell[],
     index: number
   ): MatchResult => {
-    UPPER_CASE_LETTER;
     const cell = cells[index];
 
     if (!cellsEqual(cell, UPPER_CASE_LETTER)) {
       return null;
     }
 
-    if (index + 1 < cells.length) {
-      const nextCell = cells[index + 1];
-      if (cellsEqual(nextCell, UPPER_CASE_LETTER)) {
-        return {
-          entries: [{ str: "", cells: UPPER_CASE_WORD }],
-          state: State.UppercaseWord,
-        };
-      }
+    if (index + 1 == cells.length) {
+      return {
+        entries: [{ str: "", cells: [UPPER_CASE_LETTER] }],
+        state: State.UppercaseLetter,
+      };
     }
-    return {
-      entries: [{ str: "", cells: [UPPER_CASE_LETTER] }],
-      state: State.UppercaseLetter,
-    };
+
+    const nextCell = cells[index + 1];
+    if (cellsEqual(nextCell, UPPER_CASE_LETTER)) {
+      return {
+        entries: [{ str: "", cells: UPPER_CASE_WORD }],
+        state: State.UppercaseWord,
+      };
+    } else if (cellsEqual(nextCell, CAPITALS_TERMINATOR[1])) {
+      return {
+        entries: [
+          {
+            str: "",
+            cells: CAPITALS_TERMINATOR,
+          },
+        ],
+        state: State.Default,
+      };
+    } else {
+      return {
+        entries: [{ str: "", cells: [UPPER_CASE_LETTER] }],
+        state: State.UppercaseLetter,
+      };
+    }
   };
 }

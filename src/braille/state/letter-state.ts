@@ -1,6 +1,6 @@
-import { getKeyByValue } from "../../utils";
+import { getKeyByValue, isUppercase } from "../../utils";
 import { BRAILLE_MAP, WORD_BOUNDARY_CHARS } from "../braille-map";
-import { LETTER_SIGN } from "../braille-modifiers";
+import { CAPITALS_TERMINATOR, LETTER_SIGN } from "../braille-modifiers";
 import { Cell, cellsEqual } from "../cell";
 import { State, StateHandler } from "./state-handler";
 import { MatchResult, MatchEntries } from "./types";
@@ -12,33 +12,63 @@ import { MatchResult, MatchEntries } from "./types";
  */
 export class LetterState implements StateHandler {
   textToBraille = (state: State, str: string, index: number): MatchResult => {
-    let char = str.charAt(index);
-    let isUppercase: boolean;
+    const char = str.charAt(index);
     switch (state) {
-      case State.Default:
-      case State.Number:
-        isUppercase = false;
-        break;
-      case State.UppercaseWord:
-      case State.UppercaseLetter:
-        char = char.toLowerCase();
-        isUppercase = true;
-        break;
+      case State.Default: {
+        const match = BRAILLE_MAP[char];
+        if (match == null) {
+          return null;
+        }
+        return {
+          entries: [{ str: char, cells: [match] }],
+          state: State.Default,
+        };
+      }
+      case State.Number: {
+        const match = BRAILLE_MAP[char];
+        if (match == null) {
+          return null;
+        }
+        const entries: MatchEntries = [];
+        if (!WORD_BOUNDARY_CHARS.includes(char)) {
+          entries.push({ str: "", cells: [LETTER_SIGN] });
+        }
+        entries.push({
+          str: char,
+          cells: [match],
+        });
+        return { entries, state: State.Default };
+      }
+      case State.UppercaseWord: {
+        const isUppercaseChar = isUppercase(char);
+        const match = BRAILLE_MAP[isUppercaseChar ? char.toLowerCase() : char];
+        if (match == null) {
+          return null;
+        }
+        const entries: MatchEntries = [];
+        if (!isUppercaseChar) {
+          entries.push({ str: "", cells: CAPITALS_TERMINATOR });
+        }
+        entries.push({ str: char, cells: [match] });
+        const nextState = isUppercaseChar ? State.UppercaseWord : State.Default;
+        return { entries, state: nextState };
+      }
+      case State.UppercaseLetter: {
+        if (!isUppercase(char)) {
+          // This would be a very odd situation and likely a bug.
+          return null;
+        }
+
+        const match = BRAILLE_MAP[char.toLowerCase()];
+        if (match == null) {
+          return null;
+        }
+        return {
+          entries: [{ str: char, cells: [match] }],
+          state: State.Default,
+        };
+      }
     }
-    const match = BRAILLE_MAP[char];
-    if (match == null) {
-      return null;
-    }
-    const ret: MatchEntries = [];
-    if (state === State.Number && !WORD_BOUNDARY_CHARS.includes(char)) {
-      ret.push({ str: "", cells: [LETTER_SIGN] });
-    }
-    ret.push({ str: isUppercase ? char.toUpperCase() : char, cells: [match] });
-    const nextState =
-      state === State.UppercaseWord && char !== " "
-        ? State.UppercaseWord
-        : State.Default;
-    return { entries: ret, state: nextState };
   };
 
   brailleToText = (
