@@ -65,12 +65,7 @@ describe("state", () => {
         ["z", [[1, 3, 5, 6]]],
       ],
     ],
-    [
-      "invalid cell",
-      "cells",
-      [["?", [[1, 2, 3, 5, 6]]]],
-      [["?", [INVALID_CELL]]],
-    ],
+    ["invalid cell", "cells", [["?", [[4]]]], [["?", [INVALID_CELL]]]],
     [
       "invalid cell prefix and suffix",
       "cells",
@@ -257,6 +252,14 @@ describe("state", () => {
     ],
     ["Can", ["", [[6]]], ["Can", [[1, 4]]]],
     ["KNOWLEDGE", ["", [[6], [6]]], ["KNOWLEDGE", [[1, 3]]]],
+    [
+      "a child and",
+      ["a", [[1]]],
+      [" ", [[]]],
+      ["child", [[1, 6]]],
+      [" ", [[]]],
+      ["and", [[1, 2, 3, 4, 6]]],
+    ],
   ])(
     "end-to-end: %s",
     (_name: string, ...input: readonly [string, readonly Cell[]][]) => {

@@ -64,6 +64,7 @@ export const BRAILLE_WORD_SIGNS: LatinToCellMapping = {
   it: BRAILLE_MAP["x"],
   you: BRAILLE_MAP["y"],
   as: BRAILLE_MAP["z"],
+  // Strong Word Signs
   were: [2, 3, 5, 6],
   still: [3, 4],
   child: [1, 6],
@@ -74,6 +75,12 @@ export const BRAILLE_WORD_SIGNS: LatinToCellMapping = {
   enough: [2, 6],
   his: [2, 3, 6],
   was: [3, 5, 6],
+  // Strong Contractions
+  and: [1, 2, 3, 4, 6],
+  for: [1, 2, 3, 4, 5, 6],
+  of: [1, 2, 3, 5, 6],
+  the: [2, 3, 4, 6],
+  with: [2, 3, 4, 5, 6],
 };
 
 export const NUMBER_LETTER_MAPPING: Readonly<{ [number: string]: string }> = {
@@ -92,6 +99,15 @@ export const NUMBER_LETTER_MAPPING: Readonly<{ [number: string]: string }> = {
 export const ANYWHERE_LOWER_GROUP_SIGNS: LatinToCellMapping = {
   en: [2, 6],
   in: [3, 5],
+};
+
+export const STRONG_WORD_SIGNS: LatinToCellMapping = {
+  child: [1, 6],
+  still: [3, 4],
+  shall: [1, 4, 6],
+  this: [1, 4, 5, 6],
+  which: [1, 5, 6],
+  out: [1, 2, 5, 6],
 };
 
 export const WORD_BOUNDARY_CHARS: readonly string[] = ["-", " "];
