@@ -5,14 +5,16 @@ import { LetterState } from "./letter-state";
 import { NumberState } from "./number-state";
 import { RootState } from "./root-state";
 import { State, StateHandler } from "./state-handler";
+import { StrongGroupSign } from "./strong-group-sign-state";
 import { MatchResult, MatchEntry } from "./types";
 import { UppercaseState } from "./uppercase-state";
 import { WordGroupState } from "./word-group-state";
 
 const ORDERED_STATES: readonly StateHandler[] = [
   new UppercaseState(),
-  new AnywhereGroupState(),
   new WordGroupState(),
+  new StrongGroupSign(),
+  new AnywhereGroupState(),
   new LetterState(),
   new NumberState(),
 ];

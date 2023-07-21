@@ -110,6 +110,23 @@ export const STRONG_WORD_SIGNS: LatinToCellMapping = {
   out: [1, 2, 5, 6],
 };
 
+export const ANYWHERE_STRONG_GROUP_SIGNS: LatinToCellMapping = {
+  ch: [1, 6],
+  gh: [1, 2, 6],
+  sh: [1, 4, 6],
+  th: [1, 4, 5, 6],
+  wh: [1, 5, 6],
+  ed: [1, 2, 4, 6],
+  er: [1, 2, 4, 5, 6],
+  ou: [1, 2, 5, 6],
+  ow: [2, 4, 6],
+  st: [3, 4],
+  ar: [3, 4, 5],
+};
+export const STRONG_GROUP_SIGNS: LatinToCellMapping = {
+  ing: [3, 4, 6],
+};
+
 export const WORD_BOUNDARY_CHARS: readonly string[] = ["-", " "];
 
 export const WORD_BOUNDARY_CELLS: readonly ValidCell[] =

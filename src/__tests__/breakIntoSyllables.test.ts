@@ -9,5 +9,7 @@ describe("breakIntoSyllables", () => {
       "ate",
     ]);
     expect(breakIntoSyllables("sample")).toStrictEqual(["sam", "ple"]);
+    expect(breakIntoSyllables("mist")).toStrictEqual(["mist"]);
+    expect(breakIntoSyllables("mistake")).toStrictEqual(["mis", "take"]);
   });
 });

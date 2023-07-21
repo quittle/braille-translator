@@ -1,62 +1,12 @@
 import { uppercaseFirstLetter } from "../../utils";
-import {
-  BRAILLE_WORD_SIGNS,
-  WORD_BOUNDARY_CELLS,
-  WORD_BOUNDARY_CHARS,
-} from "../braille-map";
-import { UPPER_CASE_LETTER } from "../braille-modifiers";
+import { BRAILLE_WORD_SIGNS, WORD_BOUNDARY_CHARS } from "../braille-map";
 import { Cell, cellsEqual } from "../cell";
 import { State, StateHandler } from "./state-handler";
 import { MatchResult } from "./types";
-
-/**
- * Checks if the current character is valid for being at a word boundary.
- */
-function isStringIndexEligibleForWordBoundary(
-  str: string,
-  index: number
-): boolean {
-  if (index !== 0 && !WORD_BOUNDARY_CHARS.includes(str[index - 1])) {
-    return false;
-  }
-  return true;
-}
-
-/**
- * Checks if the current cell is valid for being at a word boundary.
- */
-function isCellIndexEligibleForWordBoundary(
-  cells: readonly Cell[],
-  index: number
-): boolean {
-  const isBeforeEligible = (index: number): boolean => {
-    if (index === 0) {
-      return true;
-    } else if (
-      WORD_BOUNDARY_CELLS.some((cell) => cellsEqual(cell, cells[index - 1]))
-    ) {
-      return true;
-    } else if (cellsEqual(cells[index - 1], UPPER_CASE_LETTER)) {
-      return isBeforeEligible(index - 1);
-    }
-    return false;
-  };
-
-  const isAfterEligible = (index: number): boolean => {
-    if (index === cells.length - 1) {
-      return true;
-    } else if (
-      WORD_BOUNDARY_CELLS.some((cell) => cellsEqual(cell, cells[index + 1]))
-    ) {
-      return true;
-    } else if (cellsEqual(cells[index], UPPER_CASE_LETTER)) {
-      return isAfterEligible(index + 1);
-    }
-    return false;
-  };
-
-  return isBeforeEligible(index) && isAfterEligible(index);
-}
+import {
+  isStringIndexEligibleForWordBoundary,
+  isCellIndexEligibleForWordBoundary,
+} from "./utils";
 
 /**
  * Matches words
