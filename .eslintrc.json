@@ -51,7 +51,8 @@
       { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
     ],
     "@typescript-eslint/switch-exhaustiveness-check": "error",
-    "new-cap": ["error", { "capIsNewExceptions": ["Cell"] }]
+    "new-cap": ["error", { "capIsNewExceptions": ["Cell"] }],
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "settings": {
     "react": {
