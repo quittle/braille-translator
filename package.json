@@ -33,7 +33,7 @@
     "prettier": "^2.7.1",
     "sass": "^1.54.4",
     "ts-jest": "^28.0.7",
-    "typescript": "^4.6.4",
+    "typescript": "^7.0.2",
     "vite": "^3.2.7",
     "vite-plugin-svgr": "^2.2.1"
   },
