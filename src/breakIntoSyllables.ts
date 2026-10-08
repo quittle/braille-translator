@@ -1,8 +1,6 @@
 // These are untyped and require to be loaded this way.
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const Hypher = require("hypher");
-// eslint-disable-next-line @typescript-eslint/no-var-requires
 const english = require("hyphenation.en-us");
 
 const hypher = new Hypher(english);
