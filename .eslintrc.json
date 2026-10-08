@@ -3,35 +3,56 @@
     "browser": true,
     "es2021": true
   },
-  "extends": ["plugin:react/recommended", "google", "prettier"],
-  "ignorePatterns": [
-    "**/*.scss",
-    "**/*.png",
-    "**/*.svg",
-    "dist/**",
-    "**/*.ts",
-    "**/*.tsx"
+  "extends": [
+    "plugin:react/recommended",
+    "plugin:@typescript-eslint/recommended",
+    "google",
+    "prettier"
   ],
-  "overrides": [],
+  "ignorePatterns": ["**/*.scss", "**/*.png", "**/*.svg", "dist/**"],
+
+  "overrides": [
+    {
+      "files": ["**/*.test.ts"],
+      "plugins": ["jest"],
+      "extends": ["plugin:jest/all"],
+      "rules": {
+        "jest/no-conditional-expect": "off",
+        "jest/prefer-expect-assertions": "off",
+        "jest/no-conditional-in-test": "off",
+        "jest/max-expects": "off",
+        "jest/consistent-test-it": [
+          "error",
+          {
+            "fn": "test",
+            "withinDescribe": "test"
+          }
+        ]
+      }
+    }
+  ],
+  "parser": "@typescript-eslint/parser",
   "parserOptions": {
     "ecmaFeatures": {
       "jsx": true
     },
     "ecmaVersion": "latest",
-    "sourceType": "module"
+    "sourceType": "module",
+    "project": "tsconfig.json"
   },
-  "plugins": ["react"],
+  "plugins": ["react", "@typescript-eslint"],
   "rules": {
-    "new-cap": [
-      "error",
-      {
-        "capIsNewExceptions": ["Cell"]
-      }
-    ],
     "no-console": "error",
     "react/jsx-uses-react": "off",
     "react/react-in-jsx-scope": "off",
-    "valid-jsdoc": "off"
+    "valid-jsdoc": "off",
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      { "varsIgnorePattern": "^_", "argsIgnorePattern": "^_" }
+    ],
+    "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "new-cap": ["error", { "capIsNewExceptions": ["Cell"] }],
+    "@typescript-eslint/ban-ts-comment": "off"
   },
   "settings": {
     "react": {
