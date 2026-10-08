@@ -2,6 +2,8 @@ on:
   # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
+  # Runs on pull requests for CI checks
+  pull_request:
   # Allow manual runs
   workflow_dispatch:
 
