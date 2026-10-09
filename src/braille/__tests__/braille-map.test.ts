@@ -1,3 +1,4 @@
+import { describe, expect, test } from "@jest/globals";
 import { Cell, isValidCell, ValidCell } from "../";
 import {
   ANYWHERE_LOWER_GROUP_SIGNS,
@@ -17,6 +18,7 @@ describe("braille-map", () => {
     (_name: string, cellOrCells: Cell | [Cell, Cell]) => {
       if (typeof cellOrCells === "string") {
         expect(Object.keys(BRAILLE_MAP)).toContain(cellOrCells);
+
         return;
       }
 
@@ -26,7 +28,9 @@ describe("braille-map", () => {
           : [cellOrCells];
       for (let cell of cells as Cell[]) {
         expect(isValidCell(cell)).toBe(true);
+
         cell = cell as ValidCell;
+
         expect(cell).toBeInstanceOf(Array);
         expect(cell).toStrictEqual([...cell].sort());
 
@@ -35,17 +39,16 @@ describe("braille-map", () => {
           expect(pip).toBeLessThanOrEqual(8);
         }
       }
+
+      // Guard against vacuous pass; also satisfies jest/prefer-ending-with-an-expect.
+      expect(cells.length).toBeGreaterThan(0);
     }
   );
 
   test("unique latin characters", () => {
     const allCells: readonly Cell[] = Object.values(BRAILLE_MAP);
-    for (let i = 0; i < allCells.length; i++) {
-      const cell = allCells[i];
-      expect([
-        ...allCells.slice(0, i),
-        ...allCells.slice(i + 1),
-      ]).not.toContainEqual(cell);
-    }
+    const serializedCells = allCells.map((cell) => JSON.stringify(cell));
+
+    expect(new Set(serializedCells).size).toBe(allCells.length);
   });
 });
