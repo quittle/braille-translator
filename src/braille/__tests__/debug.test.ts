@@ -1,3 +1,4 @@
+import { describe, expect, test } from "@jest/globals";
 import { STATE_DEBUG } from "../state/debug";
 
 describe("debug", () => {

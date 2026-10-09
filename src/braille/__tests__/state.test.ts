@@ -1,5 +1,6 @@
 /* eslint-disable jest/expect-expect */
 
+import { describe, expect, test } from "@jest/globals";
 import { Cell, INVALID_CELL } from "../cell";
 import { brailleToText, textToBraille } from "../state";
 
@@ -9,9 +10,11 @@ function testTextToBraille(
   expectedOutput: readonly [string, readonly Cell[]][]
 ) {
   const result = textToBraille(text);
+
   expect(result).not.toBeNull();
 
   const textToBrailleOutput = result?.map(({ str, cells }) => [str, cells]);
+
   expect(textToBrailleOutput).toStrictEqual(expectedOutput);
 }
 
@@ -21,9 +24,11 @@ function testBrailleToText(
   expectedOutput: readonly [string, readonly Cell[]][]
 ) {
   const result = brailleToText(cells);
+
   expect(result).not.toBeNull();
 
   const brailleToTextOutput = result?.map(({ str, cells }) => [str, cells]);
+
   expect(brailleToTextOutput).toStrictEqual(expectedOutput);
 }
 
@@ -106,16 +111,13 @@ describe("state", () => {
           ["", []]
         );
 
-      switch (textOrCells) {
-        case "text":
-          testTextToBraille(origText, firstConversion);
-          testBrailleToText(outputCells, secondConversion);
-          return;
-        case "cells":
-          testBrailleToText(outputCells, firstConversion);
-          testTextToBraille(origText, secondConversion);
-          return;
-      }
+      const textConversion: readonly [string, readonly Cell[]][] =
+        textOrCells === "text" ? firstConversion : secondConversion;
+      const brailleConversion: readonly [string, readonly Cell[]][] =
+        textOrCells === "text" ? secondConversion : firstConversion;
+
+      testTextToBraille(origText, textConversion);
+      testBrailleToText(outputCells, brailleConversion);
     }
   );
 
