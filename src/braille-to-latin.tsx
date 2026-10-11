@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Cell, brailleToText, cellToUnicode } from "./braille";
 import BrailleInput from "./braille-input";
-import { ReactComponent as BackspaceIcon } from "./assets/icon-backspace.svg";
+import BackspaceIcon from "./assets/icon-backspace.svg?react";
 import "./braille-to-latin.scss";
 
 /**
