@@ -7,4 +7,18 @@ import svgr from "vite-plugin-svgr";
 export default defineConfig({
   plugins: [commonjs(), svgr(), react()],
   base: "./",
+  css: {
+    preprocessorOptions: {
+      scss: {
+        api: "modern",
+        // Turn Sass deprecation warnings into hard build errors.
+        fatalDeprecations: [
+          "global-builtin",
+          "color-functions",
+          "slash-div",
+          "import",
+        ],
+      },
+    },
+  },
 });

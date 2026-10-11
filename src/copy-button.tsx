@@ -1,4 +1,4 @@
-import { ReactComponent as CopyIcon } from "./assets/icon-copy.svg";
+import CopyIcon from "./assets/icon-copy.svg?react";
 import { useEffect, useState } from "react";
 import { usePrevious } from "./effects";
 import "./copy-button.scss";
