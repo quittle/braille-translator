@@ -1,3 +1,4 @@
+import { describe, expect, test } from "@jest/globals";
 import { Cell, INVALID_CELL, isValidCell, tryParseCell } from "../cell";
 
 describe("cell", () => {
@@ -23,6 +24,7 @@ describe("cell", () => {
 
     const originalCell = [1, 2, 3];
     const returnedCell = tryParseCell(originalCell);
+
     expect(originalCell).toBe(returnedCell);
   });
 

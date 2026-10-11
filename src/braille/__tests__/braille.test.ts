@@ -1,3 +1,4 @@
+import { describe, expect, test } from "@jest/globals";
 import { cellToUnicode } from "../braille";
 
 const BRAILLE_SPACE = "⠀";
