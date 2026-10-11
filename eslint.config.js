@@ -53,11 +53,12 @@ export default [
       jest: jestPlugin,
     },
     rules: {
-      ...jestPlugin.configs["flat/recommended"].rules,
+      ...jestPlugin.configs["flat/all"].rules,
       "jest/no-conditional-expect": "off",
       "jest/prefer-expect-assertions": "off",
       "jest/no-conditional-in-test": "off",
       "jest/max-expects": "off",
+      "jest/prefer-ending-with-an-expect": "off",
       "jest/consistent-test-it": [
         "error",
         { fn: "test", withinDescribe: "test" },
