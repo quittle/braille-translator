@@ -111,16 +111,15 @@ describe("state", () => {
           ["", []]
         );
 
-      switch (textOrCells) {
-        case "text":
-          testTextToBraille(origText, firstConversion);
-          testBrailleToText(outputCells, secondConversion);
-          return;
-        case "cells":
-          testBrailleToText(outputCells, firstConversion);
-          testTextToBraille(origText, secondConversion);
-          return;
-      }
+      // Both directions are always verified; the input kind only selects
+      // which conversion is expected from which direction.
+      const textConversion =
+        textOrCells === "text" ? firstConversion : secondConversion;
+      const brailleConversion =
+        textOrCells === "text" ? secondConversion : firstConversion;
+
+      testTextToBraille(origText, textConversion);
+      testBrailleToText(outputCells, brailleConversion);
     }
   );
 

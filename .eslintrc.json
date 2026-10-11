@@ -21,7 +21,17 @@
         "jest/prefer-expect-assertions": "off",
         "jest/no-conditional-in-test": "off",
         "jest/max-expects": "off",
-        "jest/prefer-ending-with-an-expect": "off",
+        "jest/prefer-ending-with-an-expect": [
+          "error",
+          {
+            "assertFunctionNames": [
+              "expect",
+              "testTextToBraille",
+              "testBrailleToText",
+              "expectValidCells"
+            ]
+          }
+        ],
         "jest/consistent-test-it": [
           "error",
           {

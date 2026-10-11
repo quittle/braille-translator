@@ -7,6 +7,30 @@ import {
 } from "../braille-map";
 import * as BrailleModifiers from "../braille-modifiers";
 
+/**
+ * Asserts that every cell in a braille map entry is well-formed.
+ * Recognized as an assertion by jest/prefer-ending-with-an-expect.
+ */
+function expectValidCells(cellOrCells: Cell | [Cell, Cell]): void {
+  const cells =
+    cellOrCells.length > 0 && Array.isArray(cellOrCells[0])
+      ? cellOrCells
+      : [cellOrCells];
+  for (let cell of cells as Cell[]) {
+    expect(isValidCell(cell)).toBe(true);
+
+    cell = cell as ValidCell;
+
+    expect(cell).toBeInstanceOf(Array);
+    expect(cell).toStrictEqual([...cell].sort());
+
+    for (const pip of cell) {
+      expect(pip).toBeGreaterThanOrEqual(1);
+      expect(pip).toBeLessThanOrEqual(8);
+    }
+  }
+}
+
 describe("braille-map", () => {
   test.each([
     ...Object.entries(BRAILLE_MAP),
@@ -22,35 +46,14 @@ describe("braille-map", () => {
         return;
       }
 
-      const cells =
-        cellOrCells.length > 0 && Array.isArray(cellOrCells[0])
-          ? cellOrCells
-          : [cellOrCells];
-      for (let cell of cells as Cell[]) {
-        expect(isValidCell(cell)).toBe(true);
-
-        cell = cell as ValidCell;
-
-        expect(cell).toBeInstanceOf(Array);
-        expect(cell).toStrictEqual([...cell].sort());
-
-        for (const pip of cell) {
-          expect(pip).toBeGreaterThanOrEqual(1);
-          expect(pip).toBeLessThanOrEqual(8);
-        }
-      }
+      expectValidCells(cellOrCells);
     }
   );
 
   test("unique latin characters", () => {
     const allCells: readonly Cell[] = Object.values(BRAILLE_MAP);
-    for (let i = 0; i < allCells.length; i++) {
-      const cell = allCells[i];
+    const uniqueCells = new Set(allCells.map((cell) => JSON.stringify(cell)));
 
-      expect([
-        ...allCells.slice(0, i),
-        ...allCells.slice(i + 1),
-      ]).not.toContainEqual(cell);
-    }
+    expect(uniqueCells.size).toBe(allCells.length);
   });
 });
